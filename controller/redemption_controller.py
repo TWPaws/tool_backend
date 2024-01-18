@@ -1,165 +1,74 @@
-from flask import app, request, jsonify
-import requests
+from flask import Blueprint, jsonify
 from service.twitch_service import TwitchService
 
-access_token = None
-client_id = 'fhc0ko2asch2gf7ya4ame220yahpka'
-twitch_service = TwitchService(access_token, client_id)
+access_token = 'zzphl0ev6dtb1v9heg7s9rpngvgh69'
+clientID = 'fhc0ko2asch2gf7ya4ame220yahpka'
+broadcasterID = "29127270"
+twitch_service = TwitchService(access_token, clientID)
 
-# Twitch OAuth2.0 callback URL
-@app.route('/callback')
-def callback():
-    access_token = request.args.get('code')
-    return f'Authorization Code: {access_token}'
+redemption = Blueprint('redemption_route', __name__)
 
-@app.route('/broadcasters', methods=['GET'])
-def get_broadcaster_id():
+
+@redemption.route('/customRewards/broadcasterID', methods=['GET'])
+def get_custom_rewards(broadcasterID):
     if access_token is None:
-        return jsonify({'error': 'Access Token is required'}), 400
+        return jsonify({'error': 'Access Token is required'}, 400)
 
-    broadcaster_id = twitch_service.get_broadcaster_id(access_token, client_id)
-    if broadcaster_id is not None:
-        return jsonify({'broadcaster_id': broadcaster_id})
+    respones = twitch_service.get_custom_rewards(broadcasterID)
+
+    if respones is not None:
+        return jsonify(respones)
     else:
-        return jsonify({'error': f"Error: {response.status_code}, {response.text}"}), response.status_code
+        return jsonify({'error': "Error"})
 
 
+@redemption.route('/RewardRedemption/broadcasterID/rewardID', methods=['GET'])
+def get_Rewards_Redemption(broadcasterID, rewardID):
+    if access_token is None:
+        return jsonify({'error': 'Access Token is required'}, 400)
 
+    respones = twitch_service.rewards_redemption(broadcasterID, rewardID)
 
-
-
-
-
-
-@app.route('/getCustomRewards')
-def get_custom_rewards():
-    
-    if not access_token:
-        return jsonify({'error': 'Access Token is required'}), 400
-
-    broadcaster_id = "29127270"
-    endpoint = f'https://api.twitch.tv/helix/channel_points/custom_rewards?broadcaster_id={broadcaster_id}'
-
-    headers = {
-        'Client-ID': 'fhc0ko2asch2gf7ya4ame220yahpka',
-        'Authorization': f'Bearer {access_token}'
-    }
-
-    response = requests.get(endpoint,headers=headers)
-
-    if response.status_code == 200:
-        user_data = response.json()
-
-        broadcaster_id = user_data["data"][0]["id"]
-        return jsonify(user_data)
+    if respones is not None:
+        return jsonify(respones)
     else:
-        return jsonify({'error': f"Error: {response.status_code}, {response.text}"}), response.status_code
+        return jsonify({'error': "Error"})
 
-@app.route('/getCustomRewardRedemption')
-def get_Custom_Rewards_Redemption():
-    
-    if not access_token:
-        return jsonify({'error': 'Access Token is required'}), 400
-    
-    broadcaster_id = "29127270"
-    endpoint = f'https://api.twitch.tv/helix/channel_points/custom_rewards/redemptions?broadcaster_id={broadcaster_id}&reward_id=abccbb16-adcc-4fc9-9579-a96b9be431ce&status=UN FULFILLED'
 
-    headers = {
-        'Client-ID': 'fhc0ko2asch2gf7ya4ame220yahpka',
-        'Authorization': f'Bearer {access_token}'
-    }
+@redemption.route('/createRewards/broadcasterID/title/cost', methods=['POST'])
+def create_custom_rewards(title, cost):
+    if access_token is None:
+        return jsonify({'error': 'Access Token is required'}, 400)
 
-    response = requests.get(endpoint,headers=headers)
+    respones = twitch_service.create_custom_rewards(broadcasterID, title, cost)
 
-    if response.status_code == 200:
-        user_data = response.json()
-
-        return jsonify(user_data)
+    if respones is not None:
+        return jsonify(respones)
     else:
-        return jsonify({'error': f"Error: {response.status_code}, {response.text}"}), response.status_code
+        return jsonify({'error': "Error"})
 
-@app.route('/createCustomRewards')
-def create_custom_rewards():
-    
-    if not access_token:
-        return jsonify({'error': 'Access Token is required'}), 400
 
-    broadcaster_id = "29127270"
-    endpoint = f'https://api.twitch.tv/helix/channel_points/custom_rewards?broadcaster_id={broadcaster_id}'
+@redemption.route('/deleteRewards/broadcasterID/rewardID', methods=['DELETE'])
+def delete_rewards(broadcasterID, rewardID):
+    if access_token is None:
+        return jsonify({'error': 'Access Token is required'}, 400)
 
-    headers = {
-        'Client-ID': 'fhc0ko2asch2gf7ya4ame220yahpka',
-        'Authorization': f'Bearer {access_token}',
-        'Content-Type': 'application/json'
-    }
+    respones = twitch_service.delete_rewards(broadcasterID, rewardID)
 
-    data = {
-        "title": "API_test1",
-        "cost": 100
-    }
-    
-    response = requests.post(endpoint,headers=headers,json=data)
-
-    if response.status_code == 200:
-        user_data = response.json()
-
-        broadcaster_id = user_data["data"][0]["id"]
-        return jsonify({'broadcaster_id': broadcaster_id})
+    if respones is not None:
+        return jsonify(respones)
     else:
-        return jsonify({'error': f"Error: {response.status_code}, {response.text}"}), response.status_code
+        return jsonify({'error': "Error"})
 
-@app.route('/deleteCustomRewards')
-def delete_custom_rewards():
 
-    if not access_token:
-        return jsonify({'error': 'Access Token is required'}), 400
+@redemption.route('/updateReward/broadID/rewardID/cost', methods=['PATCH'])
+def update_Reward(broadcasterID, rewardID, cost):
+    if access_token is None:
+        return jsonify({'error': 'Access Token is required'}, 400)
 
-    broadcaster_id = "29127270"
-    reward_id = "abccbb16-adcc-4fc9-9579-a96b9be431ce"
+    respones = twitch_service.update_Reward(broadcasterID, rewardID, cost)
 
-    endpoint = f"https://api.twitch.tv/helix/channel_points/custom_rewards?broadcaster_id={broadcaster_id}&id={reward_id}"
-
-    headers = {
-        'Client-ID': 'fhc0ko2asch2gf7ya4ame220yahpka',
-        'Authorization': f'Bearer {access_token}',
-    }
-
-    response = requests.delete(endpoint, headers=headers)
-
-    if response.status_code == 200:
-        user_data = response.json()
-
-        broadcaster_id = user_data["data"][0]["id"]
-        return jsonify({'broadcaster_id': broadcaster_id})
+    if respones is not None:
+        return jsonify(respones)
     else:
-        return jsonify({'error': f"Error: {response.status_code}, {response.text}"}), response.status_code
-
-@app.route('/updateCustomReward')
-def update_Custom_Reward():
-
-    if not access_token:
-        return jsonify({'error': 'Access Token is required'}), 400
-
-    broadcaster_id = "29127270"
-    reward_id = "abccbb16-adcc-4fc9-9579-a96b9be431ce"
-
-    endpoint = f"https://api.twitch.tv/helix/channel_points/custom_rewards?broadcaster_id={broadcaster_id}&id={reward_id}"
-
-    headers = {
-        'Client-ID': 'fhc0ko2asch2gf7ya4ame220yahpka',
-        'Authorization': f'Bearer {access_token}',
-        'Content-Type': 'application/json'
-    }
-
-    data = {
-        "cost": 200
-    }
-
-    response = requests.patch(endpoint, headers=headers,json=data)
-
-    if response.status_code == 200:
-        user_data = response.json()
-
-        return jsonify(user_data)
-    else:
-        return jsonify({'error': f"Error: {response.status_code}, {response.text}"}), response.status_code
+        return jsonify({'error': "Error"})
