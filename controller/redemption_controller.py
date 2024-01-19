@@ -1,20 +1,21 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 from service.twitch_service import TwitchService
 
-access_token = 'zzphl0ev6dtb1v9heg7s9rpngvgh69'
-clientID = 'fhc0ko2asch2gf7ya4ame220yahpka'
-broadcasterID = "29127270"
-twitch_service = TwitchService(access_token, clientID)
-
-redemption = Blueprint('redemption_route', __name__)
+point = Blueprint('redemption_route', __name__)
 
 
-@redemption.route('/customRewards/broadcasterID', methods=['GET'])
-def get_custom_rewards(broadcasterID):
+@point.route('/customRewards', methods=['GET'])
+def get_custom_rewards(access_token, broadID):
+
+    access_token = request.args.get('access_token')
+    broadID = request.args.get('broadID')
+
     if access_token is None:
         return jsonify({'error': 'Access Token is required'}, 400)
 
-    respones = twitch_service.get_custom_rewards(broadcasterID)
+    twitch_service = TwitchService(access_token)
+
+    respones = twitch_service.get_custom_rewards(broadID)
 
     if respones is not None:
         return jsonify(respones)
@@ -22,12 +23,19 @@ def get_custom_rewards(broadcasterID):
         return jsonify({'error': "Error"})
 
 
-@redemption.route('/RewardRedemption/broadcasterID/rewardID', methods=['GET'])
-def get_Rewards_Redemption(broadcasterID, rewardID):
+@point.route('/rewardRedemption', methods=['GET'])
+def get_Rewards_Redemption():
+
+    access_token = request.args.get('access_token')
+    broadID = request.args.get('broadID')
+    rewardID = request.args.get('rewardID')
+
     if access_token is None:
         return jsonify({'error': 'Access Token is required'}, 400)
 
-    respones = twitch_service.rewards_redemption(broadcasterID, rewardID)
+    twitch_service = TwitchService(access_token)
+
+    respones = twitch_service.rewards_point(broadID, rewardID)
 
     if respones is not None:
         return jsonify(respones)
@@ -35,12 +43,19 @@ def get_Rewards_Redemption(broadcasterID, rewardID):
         return jsonify({'error': "Error"})
 
 
-@redemption.route('/createRewards/broadcasterID/title/cost', methods=['POST'])
-def create_custom_rewards(title, cost):
+@point.route('/createRewards', methods=['POST'])
+def create_custom_rewards():
+
+    data = request.json
+    data_as_list = list(data.values())
+    access_token = data_as_list.pop()
+    broadID = data_as_list.pop()
     if access_token is None:
         return jsonify({'error': 'Access Token is required'}, 400)
 
-    respones = twitch_service.create_custom_rewards(broadcasterID, title, cost)
+    twitch_service = TwitchService(access_token)
+
+    respones = twitch_service.create_custom_rewards(broadID, data_as_list)
 
     if respones is not None:
         return jsonify(respones)
@@ -48,12 +63,21 @@ def create_custom_rewards(title, cost):
         return jsonify({'error': "Error"})
 
 
-@redemption.route('/deleteRewards/broadcasterID/rewardID', methods=['DELETE'])
-def delete_rewards(broadcasterID, rewardID):
+@point.route('/deleteRewards', methods=['DELETE'])
+def delete_rewards():
+
+    data = request.json
+    data_as_list = list(data.values())
+    access_token = data_as_list.pop()
+    broadID = data_as_list.pop()
+    rewardID = data_as_list.pop()
+
     if access_token is None:
         return jsonify({'error': 'Access Token is required'}, 400)
 
-    respones = twitch_service.delete_rewards(broadcasterID, rewardID)
+    twitch_service = TwitchService(access_token)
+
+    respones = twitch_service.delete_rewards(broadID, rewardID)
 
     if respones is not None:
         return jsonify(respones)
@@ -61,12 +85,21 @@ def delete_rewards(broadcasterID, rewardID):
         return jsonify({'error': "Error"})
 
 
-@redemption.route('/updateReward/broadID/rewardID/cost', methods=['PATCH'])
-def update_Reward(broadcasterID, rewardID, cost):
+@point.route('/updateRewardt', methods=['PATCH'])
+def update_Reward():
+
+    data = request.json
+    data_as_list = list(data.values())
+    access_token = data_as_list.pop()
+    broadID = data_as_list.pop()
+    rewardID = data_as_list.pop()
+
     if access_token is None:
         return jsonify({'error': 'Access Token is required'}, 400)
 
-    respones = twitch_service.update_Reward(broadcasterID, rewardID, cost)
+    twitch_service = TwitchService(access_token)
+
+    respones = twitch_service.update_Reward(broadID, rewardID, data_as_list)
 
     if respones is not None:
         return jsonify(respones)

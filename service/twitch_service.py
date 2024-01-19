@@ -5,9 +5,9 @@ from flask import jsonify
 class TwitchService:
     Protocol = 'https://api.twitch.tv/helix/'
 
-    def __init__(self, access_token, client_id):
+    def __init__(self, access_token):
         self.access_token = access_token
-        self.client_id = client_id
+        self.client_id = 'fhc0ko2asch2gf7ya4ame220yahpka'
 
     def get_broadcasterID(self):
         headers = {
