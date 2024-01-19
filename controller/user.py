@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 from service.twitch_service import TwitchService
 
 access_token = 'zzphl0ev6dtb1v9heg7s9rpngvgh69'
@@ -11,10 +11,15 @@ user = Blueprint('user_route', __name__)
 
 @user.route('/broadcasters', methods=['GET'])
 def get_broadcaster_id():
+
+    access_token = request.args.get('access_token')
+
     if access_token is None:
         return jsonify({'error': 'Access Token is required'}), 400
 
-    response = twitch_service.get_broadcaster_id(access_token, client_id)
+    twitch_service = TwitchService(access_token)
+
+    response = twitch_service.get_broadcaster_id()
     if response is not None:
         return jsonify({'broadcaster_id': response})
     else:

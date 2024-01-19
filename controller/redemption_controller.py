@@ -5,7 +5,7 @@ point = Blueprint('redemption_route', __name__)
 
 
 @point.route('/customRewards', methods=['GET'])
-def get_custom_rewards(access_token, broadID):
+def get_custom_rewards():
 
     access_token = request.args.get('access_token')
     broadID = request.args.get('broadID')
@@ -85,7 +85,7 @@ def delete_rewards():
         return jsonify({'error': "Error"})
 
 
-@point.route('/updateRewardt', methods=['PATCH'])
+@point.route('/updateReward', methods=['PATCH'])
 def update_Reward():
 
     data = request.json
