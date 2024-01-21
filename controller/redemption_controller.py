@@ -1,10 +1,10 @@
 from flask import Blueprint, jsonify, request
 from service.twitch_service import TwitchService
 
-point = Blueprint('redemption_route', __name__)
+point = Blueprint('point', __name__)
 
 
-@point.route('/customRewards', methods=['GET'])
+@point.route('/rewards', methods=['GET'])
 def get_custom_rewards():
 
     access_token = request.args.get('access_token')
@@ -15,15 +15,15 @@ def get_custom_rewards():
 
     twitch_service = TwitchService(access_token)
 
-    respones = twitch_service.get_custom_rewards(broadID)
+    response = twitch_service.get_custom_rewards(broadID)
 
-    if respones is not None:
-        return jsonify(respones)
+    if response is not None:
+        return jsonify(response)
     else:
         return jsonify({'error': "Error"})
 
 
-@point.route('/rewardRedemption', methods=['GET'])
+@point.route('/rewards-redemption', methods=['GET'])
 def get_Rewards_Redemption():
 
     access_token = request.args.get('access_token')
@@ -35,73 +35,69 @@ def get_Rewards_Redemption():
 
     twitch_service = TwitchService(access_token)
 
-    respones = twitch_service.rewards_point(broadID, rewardID)
+    response = twitch_service.rewards_point(broadID, rewardID)
 
-    if respones is not None:
-        return jsonify(respones)
+    if response is not None:
+        return jsonify(response)
     else:
         return jsonify({'error': "Error"})
 
 
-@point.route('/createRewards', methods=['POST'])
+@point.route('/rewards', methods=['POST'])
 def create_custom_rewards():
 
     data = request.json
-    data_as_list = list(data.values())
-    access_token = data_as_list.pop()
-    broadID = data_as_list.pop()
+    access_token = data.get('access_token')
+    broadID = data.get('broadID')
+    del data['access_token']
+    del data['broadID']
     if access_token is None:
         return jsonify({'error': 'Access Token is required'}, 400)
 
     twitch_service = TwitchService(access_token)
+    
+    response = twitch_service.create_custom_rewards(broadID, data)
 
-    respones = twitch_service.create_custom_rewards(broadID, data_as_list)
-
-    if respones is not None:
-        return jsonify(respones)
+    if response is not None:
+        return jsonify(response)
     else:
         return jsonify({'error': "Error"})
 
 
-@point.route('/deleteRewards', methods=['DELETE'])
-def delete_rewards():
+@point.route('/rewards/<rewardID>', methods=['DELETE'])
+def delete_rewards(rewardID):
 
-    data = request.json
-    data_as_list = list(data.values())
-    access_token = data_as_list.pop()
-    broadID = data_as_list.pop()
-    rewardID = data_as_list.pop()
-
+    access_token = request.args.get('access_token')
+    broadID = request.args.get('broadID')
+    
     if access_token is None:
         return jsonify({'error': 'Access Token is required'}, 400)
 
     twitch_service = TwitchService(access_token)
 
-    respones = twitch_service.delete_rewards(broadID, rewardID)
+    response = twitch_service.delete_rewards(broadID, rewardID)
 
-    if respones is not None:
-        return jsonify(respones)
+    if response is not None:
+        return response
     else:
         return jsonify({'error': "Error"})
 
 
-@point.route('/updateReward', methods=['PATCH'])
-def update_Reward():
+@point.route('/rewards/<rewardID>', methods=['PATCH'])
+def update_Reward(rewardID):
 
     data = request.json
-    data_as_list = list(data.values())
-    access_token = data_as_list.pop()
-    broadID = data_as_list.pop()
-    rewardID = data_as_list.pop()
-
+    access_token = data.get('access_token')
+    broadID = data.get('broadID')
+    del data['access_token']
+    del data['broadID']
     if access_token is None:
         return jsonify({'error': 'Access Token is required'}, 400)
 
     twitch_service = TwitchService(access_token)
 
-    respones = twitch_service.update_Reward(broadID, rewardID, data_as_list)
-
-    if respones is not None:
-        return jsonify(respones)
+    response = twitch_service.update_Reward(broadID, rewardID, data)
+    if response is not None:
+        return response
     else:
         return jsonify({'error': "Error"})

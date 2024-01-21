@@ -9,7 +9,7 @@ class TwitchService:
         self.access_token = access_token
         self.client_id = 'fhc0ko2asch2gf7ya4ame220yahpka'
 
-    def get_broadcasterID(self):
+    def get_broadID(self):
         headers = {
             "Authorization": f'Bearer {self.access_token}',
             "Client-ID": self.client_id
@@ -21,7 +21,7 @@ class TwitchService:
             user_data = response.json()
 
             broadcasterID = user_data["data"][0]["id"]
-            return jsonify(broadcasterID)
+            return jsonify({'broadcasterId': broadcasterID})
         else:
             return None
 
@@ -30,16 +30,13 @@ class TwitchService:
             "Authorization": f'Bearer {self.access_token}',
             "Client-ID": self.client_id
         }
-        Query = f'channel_points/custom_rewards?broadcasterID={broadcasterID}'
+        Query = f'channel_points/custom_rewards?broadcaster_id={broadcasterID}&only_manageable_rewards=True'
         response = req.get(
             self.Protocol + Query,
-            headers=headers
+            headers = headers
         )
-
         if response.status_code == 200:
-            reward_data = response.json()
-
-            return jsonify(reward_data)
+            return (response.json())
         else:
             return None
 
@@ -48,8 +45,14 @@ class TwitchService:
             "Authorization": f'Bearer {self.access_token}',
             "Client-ID": self.client_id
         }
+
         Path = '/channel_points/custom_rewards/redemptions?'
-        Query = f'broadcasterID={broadID}&rewardID={rewardID}&status=FULFILLED'
+        Query = (
+            f'broadcasterID={broadID}&'
+            f'rewardID={rewardID}&'
+            f'status=UNFULFILLED'
+        )
+
         response = req.get(
             self.Protocol + Query + Path,
             headers=headers
@@ -62,30 +65,22 @@ class TwitchService:
         else:
             return None
 
-    def create_custom_rewards(self, broadcasterID, title, cost):
+    def create_custom_rewards(self, broadcasterID, data):
         headers = {
             'Client-ID': self.client_id,
             'Authorization': f'Bearer {self.access_token}',
             'Content-Type': 'application/json'
         }
 
-        data = {
-            "title": title,
-            "cost": cost
-        }
-
-        Query = f'channel_points/custom_rewards?broadcasterID={broadcasterID}'
+        Query = f'channel_points/custom_rewards?broadcaster_id={broadcasterID}'
+        print(data)
         response = req.post(
             self.Protocol + Query,
             headers=headers,
             json=data
         )
-
         if response.status_code == 200:
-            create_state = response.json()
-
-            broadcasterID = create_state["data"][0]["id"]
-            return jsonify({'Reward_id': broadcasterID})
+            return (response.json())
         else:
             return None
 
@@ -96,36 +91,31 @@ class TwitchService:
         }
 
         Path = 'channel_points/custom_rewards?'
-        Query = f'broadcasterID={broadID}&id={rewardID}'
+        Query = f'broadcaster_id={broadID}&id={rewardID}'
 
         response = req.delete(self.Protocol + Path + Query, headers=headers)
 
-        if response.status_code == 200:
-            return jsonify('success')
+        if response.status_code == 204:
+            return jsonify({'status' : 'success'})
         else:
             return None
 
-    def update_Reward(self, broadcasterID, rewardID, cost):
+    def update_Reward(self, broadcasterID, rewardID, data):
         headers = {
             'Client-ID': 'fhc0ko2asch2gf7ya4ame220yahpka',
             'Authorization': f'Bearer {self.access_token}',
             'Content-Type': 'application/json'
         }
 
-        data = {
-            "cost": int(cost)
-        }
-
         Path = 'channel_points/custom_rewards'
-        Query = f'?broadcasterID={broadcasterID}&id={rewardID}'
+        Query = f'?broadcaster_id={broadcasterID}&id={rewardID}'
 
         response = req.patch(
             self.Protocol + Path + Query,
             headers=headers,
             json=data
         )
-
         if response.status_code == 200:
-            return jsonify('success')
+            return response.json()
         else:
             return None
