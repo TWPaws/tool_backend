@@ -35,7 +35,7 @@ def get_Rewards_Redemption():
 
     twitch_service = TwitchService(access_token)
 
-    response = twitch_service.rewards_point(broadID, rewardID)
+    response = twitch_service.rewards_redemption(broadID, rewardID)
 
     if response is not None:
         return jsonify(response)
@@ -55,7 +55,6 @@ def create_custom_rewards():
         return jsonify({'error': 'Access Token is required'}, 400)
 
     twitch_service = TwitchService(access_token)
-    
     response = twitch_service.create_custom_rewards(broadID, data)
 
     if response is not None:
@@ -69,7 +68,7 @@ def delete_rewards(rewardID):
 
     access_token = request.args.get('access_token')
     broadID = request.args.get('broadID')
-    
+
     if access_token is None:
         return jsonify({'error': 'Access Token is required'}, 400)
 

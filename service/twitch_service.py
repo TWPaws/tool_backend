@@ -30,10 +30,11 @@ class TwitchService:
             "Authorization": f'Bearer {self.access_token}',
             "Client-ID": self.client_id
         }
-        Query = f'channel_points/custom_rewards?broadcaster_id={broadcasterID}&only_manageable_rewards=True'
+        Path = 'channel_points/custom_rewards?'
+        Query = f'broadcaster_id={broadcasterID}&only_manageable_rewards=True'
         response = req.get(
-            self.Protocol + Query,
-            headers = headers
+            self.Protocol + Path + Query,
+            headers=headers
         )
         if response.status_code == 200:
             return (response.json())
@@ -96,7 +97,7 @@ class TwitchService:
         response = req.delete(self.Protocol + Path + Query, headers=headers)
 
         if response.status_code == 204:
-            return jsonify({'status' : 'success'})
+            return jsonify({'status': 'success'})
         else:
             return None
 

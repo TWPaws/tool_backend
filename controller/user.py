@@ -8,7 +8,7 @@ user = Blueprint('user', __name__)
 def get_broadcaster_id():
 
     access_token = request.args.get('access_token')
-    
+
     if access_token is None:
         return jsonify({'error': 'Access Token is required'}), 400
 
