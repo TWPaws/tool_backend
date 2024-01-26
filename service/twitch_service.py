@@ -1,5 +1,4 @@
 import requests as req
-from flask import jsonify
 
 
 class TwitchService:
@@ -9,7 +8,7 @@ class TwitchService:
         self.access_token = access_token
         self.client_id = 'fhc0ko2asch2gf7ya4ame220yahpka'
 
-    def get_broadID(self):
+    def get_broadcaster_id(self):
         headers = {
             "Authorization": f'Bearer {self.access_token}',
             "Client-ID": self.client_id
@@ -20,28 +19,36 @@ class TwitchService:
         if response.status_code == 200:
             user_data = response.json()
 
-            broadcasterID = user_data["data"][0]["id"]
-            return jsonify({'broadcasterId': broadcasterID})
+            broadcaster_id = user_data["data"][0]["id"]
+            return ({'broadcaster_id': broadcaster_id})
         else:
             return None
 
-    def get_custom_rewards(self, broadcasterID):
+    def get_custom_rewards(self, broadcaster_id):
         headers = {
             "Authorization": f'Bearer {self.access_token}',
             "Client-ID": self.client_id
         }
         Path = 'channel_points/custom_rewards?'
-        Query = f'broadcaster_id={broadcasterID}&only_manageable_rewards=True'
+        Query = f'broadcaster_id={broadcaster_id}&only_manageable_rewards=True'
         response = req.get(
             self.Protocol + Path + Query,
             headers=headers
         )
         if response.status_code == 200:
+            while 'cursor' in response.get('pagination', {}):
+                cursor = response['pagination']['cursor']
+                Path = 'streams?'
+                Query = f'first=20&after={cursor}'
+                response += req.get(
+                    self.Protocol + Path + Query,
+                    headers=headers
+                )
             return (response.json())
         else:
             return None
 
-    def rewards_redemption(self, broadID, rewardID):
+    def rewards_redemption(self, broadcaster_id, reward_id):
         headers = {
             "Authorization": f'Bearer {self.access_token}',
             "Client-ID": self.client_id
@@ -49,31 +56,31 @@ class TwitchService:
 
         Path = '/channel_points/custom_rewards/redemptions?'
         Query = (
-            f'broadcasterID={broadID}&'
-            f'rewardID={rewardID}&'
+            f'broadcaster_id={broadcaster_id}&'
+            f'reward_id={reward_id}&'
             f'status=UNFULFILLED'
         )
 
         response = req.get(
-            self.Protocol + Query + Path,
+            self.Protocol + Path + Query,
             headers=headers
         )
 
         if response.status_code == 200:
             reward_fulfill_data = response.json()
 
-            return jsonify(reward_fulfill_data)
+            return (reward_fulfill_data)
         else:
             return None
 
-    def create_custom_rewards(self, broadcasterID, data):
+    def create_custom_rewards(self, broadcaster_id, data):
         headers = {
             'Client-ID': self.client_id,
             'Authorization': f'Bearer {self.access_token}',
             'Content-Type': 'application/json'
         }
 
-        Query = f'channel_points/custom_rewards?broadcaster_id={broadcasterID}'
+        Query = f'channel_points/custom_rewards?broadcaster_id={broadcaster_id}'
         print(data)
         response = req.post(
             self.Protocol + Query,
@@ -85,23 +92,23 @@ class TwitchService:
         else:
             return None
 
-    def delete_rewards(self, broadID, rewardID):
+    def delete_rewards(self, broadcaster_id, reward_id):
         headers = {
             'Client-ID': self.client_id,
             'Authorization': f'Bearer {self.access_token}',
         }
 
         Path = 'channel_points/custom_rewards?'
-        Query = f'broadcaster_id={broadID}&id={rewardID}'
+        Query = f'broadcaster_id={broadcaster_id}&id={reward_id}'
 
         response = req.delete(self.Protocol + Path + Query, headers=headers)
 
         if response.status_code == 204:
-            return jsonify({'status': 'success'})
+            return ({'status': 'success'})
         else:
             return None
 
-    def update_Reward(self, broadcasterID, rewardID, data):
+    def update_Reward(self, broadcaster_id, reward_id, data):
         headers = {
             'Client-ID': 'fhc0ko2asch2gf7ya4ame220yahpka',
             'Authorization': f'Bearer {self.access_token}',
@@ -109,7 +116,7 @@ class TwitchService:
         }
 
         Path = 'channel_points/custom_rewards'
-        Query = f'?broadcaster_id={broadcasterID}&id={rewardID}'
+        Query = f'?broadcaster_id={broadcaster_id}&id={reward_id}'
 
         response = req.patch(
             self.Protocol + Path + Query,
