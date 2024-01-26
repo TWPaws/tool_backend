@@ -1,3 +1,4 @@
+#./controller/redemption_controller.py
 from flask import Blueprint, request
 from service.twitch_service import TwitchService
 
