@@ -55,7 +55,7 @@ class TwitchService:
             "Client-ID": self.client_id
         }
 
-        Path = '/channel_points/custom_rewards/redemptions?'
+        Path = 'channel_points/custom_rewards/redemptions?'
         Query = (
             f'broadcaster_id={broadcaster_id}&'
             f'reward_id={reward_id}&'
