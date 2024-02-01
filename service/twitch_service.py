@@ -1,4 +1,5 @@
 #./service/twitch_service.py
+from flask import jsonify
 import requests as req
 
 
@@ -21,7 +22,7 @@ class TwitchService:
             user_data = response.json()
 
             broadcaster_id = user_data["data"][0]["id"]
-            return ({'broadcaster_id': broadcaster_id})
+            return jsonify({'broadcaster_id': broadcaster_id, 'display_name': user_data["data"][0]["display_name"]})
         else:
             return None
 
