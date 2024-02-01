@@ -37,7 +37,7 @@ class TwitchService:
             headers=headers
         )
         if response.status_code == 200:
-            while 'cursor' in response.get('pagination', {}):
+            while 'cursor' in response.json().get('pagination', {}):
                 cursor = response['pagination']['cursor']
                 Path = 'streams?'
                 Query = f'first=20&after={cursor}'
