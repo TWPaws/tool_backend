@@ -1,4 +1,5 @@
 # ./service/twitch_service.py
+
 import requests as req
 
 
@@ -21,7 +22,7 @@ class TwitchService:
             user_data = response.json()
 
             broadcaster_id = user_data["data"][0]["id"]
-            return ({'broadcaster_id': broadcaster_id})
+            return jsonify({'broadcaster_id': broadcaster_id, 'display_name': user_data["data"][0]["display_name"]})
         else:
             return None
 
@@ -37,7 +38,7 @@ class TwitchService:
             headers=headers
         )
         if response.status_code == 200:
-            while 'cursor' in response.get('pagination', {}):
+            while 'cursor' in response.json().get('pagination', {}):
                 cursor = response['pagination']['cursor']
                 Path = 'streams?'
                 Query = f'first=20&after={cursor}'
@@ -55,7 +56,7 @@ class TwitchService:
             "Client-ID": self.client_id
         }
 
-        Path = '/channel_points/custom_rewards/redemptions?'
+        Path = 'channel_points/custom_rewards/redemptions?'
         Query = (
             f'broadcaster_id={broadcaster_id}&'
             f'reward_id={reward_id}&'
