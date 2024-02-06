@@ -1,15 +1,17 @@
-#./repo/follower_operations.py
+# ./repo/follower_operations.py
 
 import mysql.connector
+
 
 def connect_to_database():
     config = {
         'host': 'localhost',
-        'user': 'root',
+        'user': '',
         'password': 'your_password',
         'database': 'your_database',
     }
     return mysql.connector.connect(**config)
+
 
 def fetch_all_users():
     connection = connect_to_database()
@@ -22,6 +24,7 @@ def fetch_all_users():
     connection.close()
 
     return result
+
 
 def add_user(user_data):
     connection = connect_to_database()

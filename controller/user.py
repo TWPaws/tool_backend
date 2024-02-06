@@ -1,4 +1,4 @@
-#./controller/user.py
+# ./controller/user.py
 from flask import Blueprint, request
 from service.twitch_service import TwitchService
 
@@ -20,3 +20,13 @@ def get_broadcaster_id():
         return response
     else:
         return 'False'
+
+
+@user.route('/twitch_callback', methods=['GET'])
+def twitch_callback():
+    data = request.json
+    access_token = data.get('access_token')
+
+    print(access_token)
+
+    return json('Hello world')
