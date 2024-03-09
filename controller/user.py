@@ -1,7 +1,8 @@
 # ./controller/user.py
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request
 from service.twitch_service import TwitchService
-from urllib.parse import urlparse, parse_qs 
+from service.Oauth20 import get_access_token
+from repo.user_operations import add_user
 
 user = Blueprint('user', __name__)
 
@@ -26,7 +27,11 @@ def get_broadcaster_id():
 @user.route('/twitch_callback/', methods=['GET'])
 def twitch_callback():
     code = request.args.get('code')
+    user_data = request.args.get('user_data')
 
     print("Received code:", code)
 
-    return 'Received code successfully'
+    access_token = get_access_token(code)
+    add_user(user_data, access_token)
+
+    return 'Sign up successfully'

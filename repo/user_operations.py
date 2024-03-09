@@ -33,8 +33,14 @@ def add_user(user_data):
     # 假設 user_data 包含欲插入的使用者資料
     # 假設欄位包括 id、username、email 等等
 
-    insert_query = 'INSERT INTO users (id, username, email) VALUES (%s, %s, %s)'
-    cursor.execute(insert_query, (user_data['id'], user_data['username'], user_data['email']))
+    insert_query = 'INSERT INTO users (id, username, password, email, accesss_token) VALUES (%s, %s, %s, %s, %s)'
+    cursor.execute(insert_query, (
+        user_data['id'],
+        user_data['username'],
+        user_data['password'],
+        user_data['email'],
+        user_data['access_token']
+    ))
 
     connection.commit()
     cursor.close()

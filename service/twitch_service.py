@@ -1,6 +1,7 @@
 # ./service/twitch_service.py
 
 import requests as req
+from flask import jsonify
 
 
 class TwitchService:
@@ -8,7 +9,7 @@ class TwitchService:
 
     def __init__(self, access_token):
         self.access_token = access_token
-        self.client_id = 'fhc0ko2asch2gf7ya4ame220yahpka'
+        self.client_id = 'ecmnwqtzoa9c67bhtjunt7ne2vrog0'
 
     def get_broadcaster_id(self):
         headers = {
