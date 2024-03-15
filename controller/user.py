@@ -10,6 +10,31 @@ user = Blueprint('user', __name__)
 @user.route('/broadcasters', methods=['GET'])
 def get_broadcaster_id():
 
+    """
+    get broadcaster id
+    Return the user's broadcaster_id by sending a request to the Twitch API using an API
+    ---
+    tags:
+      - user
+    produces: application/json
+    parameters: []
+    responses:
+      401:
+        description: Unauthorized error or not logged in. Please authenticate
+      200:
+        description: Retrieve user's broadcaster_id and display name
+        examples: |
+          {
+              "data": [
+                  {
+                    "broadcaster_id": "274637212",
+                    "display_name": "torpedo09",
+                    }
+                  }
+              ]
+          }
+    """
+
     access_token = request.args.get('access_token')
 
     if access_token is None:
@@ -24,10 +49,38 @@ def get_broadcaster_id():
         return 'False'
 
 
-@user.route('/twitch_callback/', methods=['GET'])
+@user.route('/twitch_callback/', methods=['POST'])
 def twitch_callback():
-    code = request.args.get('code')
-    user_data = request.args.get('user_data')
+
+    """
+    Receive and retrieve the authorization code from OAuth 2.0 to create an account
+    As the Authorization code grant flow is used, after the user confirms authorization,
+    redirect back to this link and use the authorization code to retrieve the user's credentials from the OAuth 2.0 API,
+    then store them in the database to create an account
+    ---
+    tags:
+      - user
+    produces: application/json
+    parameters:
+      - name: code
+        in: bdoy
+        type: string
+        required: true
+      - name: user_data
+        in: body
+        type: array
+        required: true
+    responses:
+      401:
+        description: Unauthorized error or not logged in. Please authenticate
+      200:
+        description: Sign Up sccuess
+        examples: "Sign up successfully"
+    """
+    
+    data = request.json
+    code = data.get('code')
+    user_data = data.get('user_data')
 
     print("Received code:", code)
 
