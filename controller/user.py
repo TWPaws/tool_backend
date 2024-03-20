@@ -55,7 +55,7 @@ def twitch_callback():
     """
     Receive and retrieve the authorization code from OAuth 2.0 to create an account
     As the Authorization code grant flow is used, after the user confirms authorization,
-    redirect back to this link and use the authorization code to retrieve the user's credentials from the OAuth 2.0 API,
+    redirect back to this link and use the authorization code to retrieve the user's credentials from the OAuth API,
     then store them in the database to create an account
     ---
     tags:
@@ -77,7 +77,7 @@ def twitch_callback():
         description: Sign Up sccuess
         examples: "Sign up successfully"
     """
-    
+
     data = request.json
     code = data.get('code')
     user_data = data.get('user_data')

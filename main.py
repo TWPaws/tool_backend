@@ -3,6 +3,7 @@ from controller.redemption_controller import point
 from controller.user import user
 from flask_cors import CORS
 from flasgger import Swagger
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 
 app = Flask(__name__)
 
@@ -11,6 +12,14 @@ app.config['SWAGGER'] = {
     "version": "1.0.0",
     "hide_top_bar": True
 }
+
+app.secret_key = b'c1798eb7bba563e1409fc6d404d98f70a8f22c1e177599849524fb851efa34a7'
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.session_protection = "strong"
+login_manager.login_view = 'login'
+login_manager.login_message = '請先登入才可使用網頁 謝謝'
 
 app.register_blueprint(user, url_prefix='/user')
 app.register_blueprint(point, url_prefix='/redemption')
