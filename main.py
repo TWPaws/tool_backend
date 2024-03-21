@@ -3,7 +3,7 @@ from controller.redemption_controller import point
 from controller.user import user
 from flask_cors import CORS
 from flasgger import Swagger
-from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
+from flask_login import LoginManager
 
 app = Flask(__name__)
 

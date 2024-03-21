@@ -26,22 +26,33 @@ def fetch_all_users():
     return result
 
 
-def add_user(user_data):
+def add_user(access_token, username, email, password):
     connection = connect_to_database()
     cursor = connection.cursor()
 
-    # 假設 user_data 包含欲插入的使用者資料
-    # 假設欄位包括 id、username、email 等等
-
-    insert_query = 'INSERT INTO users (id, username, password, email, accesss_token) VALUES (%s, %s, %s, %s, %s)'
+    insert_query = 'INSERT INTO users (accesss_token, username, email, password) VALUES (%s, %s, %s, %s)'
     cursor.execute(insert_query, (
-        user_data['id'],
-        user_data['username'],
-        user_data['password'],
-        user_data['email'],
-        user_data['access_token']
+        access_token,
+        username,
+        email,
+        password
     ))
 
     connection.commit()
     cursor.close()
     connection.close()
+
+def search_user(username, password):
+    connection = connect_to_database()
+    cursor = connection.cursor()
+
+    hashed_password = hashlib.sha256(password.encode()).hexdigest()
+
+    select_query = 'SELECT * FROM users WHERE username = %s AND password = %s'
+    cursor.execute(select_query, (username, hashed_password))
+
+    user = cursor.fetchone()
+    cursor.close()
+    connection.close()
+
+    return user

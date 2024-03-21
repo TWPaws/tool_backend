@@ -2,7 +2,7 @@
 from flask import Blueprint, request
 from service.twitch_service import TwitchService
 from service.Oauth20 import get_access_token
-from repo.user_operations import add_user
+from repo.user_operations import add_user, search_user
 
 user = Blueprint('user', __name__)
 
@@ -88,3 +88,23 @@ def twitch_callback():
     add_user(user_data, access_token)
 
     return 'Sign up successfully'
+
+@register.route('/register', methods=['POST'])
+def show():
+    access_token = request.form['access_token']
+    username = request.form['username']
+    email = request.form['email']
+    password = request.form['password']
+    confirm_password = request.form['confirm-password']
+
+    if username and email and password and confirm_password:
+        if password == confirm_password:
+            hashed_password = generate_password_hash(
+                password, method='sha256')
+            if search_user(username, password):
+              return ({'status': 'Username or password already exists. Please modify again'}), 400
+              add_user(access_token, username, email, hashed_password)
+              return ({'status': 'success'}), 200
+    else:
+        return ({'status': 'fail'}), 400
+

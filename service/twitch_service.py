@@ -20,9 +20,9 @@ class TwitchService:
         response = req.get(self.Protocol + Query, headers=headers)
 
         if response.status_code == 200:
-            user_data = response.json()
+            user = response.json()
 
-            return jsonify({'broadcaster_id': user_data["data"][0]["id"], 'display_name': user_data["data"][0]["display_name"]})
+            return jsonify({'broadcaster_id': user["data"][0]["id"], 'display_name': user["data"][0]["display_name"]})
         else:
             return None
 
