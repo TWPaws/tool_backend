@@ -89,9 +89,8 @@ def twitch_callback():
 
     return 'Sign up successfully'
 
-@register.route('/register', methods=['POST'])
-def show():
-    access_token = request.form['access_token']
+@user.route('/user/register', methods=['POST'])
+def register():
     username = request.form['username']
     email = request.form['email']
     password = request.form['password']
@@ -103,7 +102,8 @@ def show():
                 password, method='sha256')
             if search_user(username, password):
               return ({'status': 'Username or password already exists. Please modify again'}), 400
-              add_user(access_token, username, email, hashed_password)
+            else :
+              add_user(username, email, hashed_password)
               return ({'status': 'success'}), 200
     else:
         return ({'status': 'fail'}), 400
