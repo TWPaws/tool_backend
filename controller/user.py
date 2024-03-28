@@ -2,10 +2,14 @@
 from flask import Blueprint, request
 from service.twitch_service import TwitchService
 from service.Oauth20 import get_access_token
+from flask_login import LoginManager, login_user,login_required, logout_user
 from repo.user_operations import add_user, search_user
 
 user = Blueprint('user', __name__)
-
+login_manager = LoginManager()
+login_manager.init_app(register)
+login_manager.init_app(login)
+login_manager.init_app(logout)
 
 @user.route('/broadcasters', methods=['GET'])
 def get_broadcaster_id():
@@ -38,15 +42,15 @@ def get_broadcaster_id():
     access_token = request.args.get('access_token')
 
     if access_token is None:
-        return ({'error': 'Access Token is required'})
+        return ({'status': '?error=Access Token is required'})
 
     twitch_service = TwitchService(access_token)
 
     response = twitch_service.get_broadcaster_id()
     if response is not None:
-        return response
+        return ({'status': '?success=access Token receive', 'response' : response}),200
     else:
-        return 'False'
+        return ({'status': '?error = error'}), 404
 
 
 @user.route('/twitch_callback/', methods=['POST'])
@@ -87,7 +91,7 @@ def twitch_callback():
     access_token = get_access_token(code)
     add_user(user_data, access_token)
 
-    return 'Sign up successfully'
+    return ({'status': 'Sign up successfully'}), 200
 
 @user.route('/user/register', methods=['POST'])
 def register():
@@ -101,10 +105,31 @@ def register():
             hashed_password = generate_password_hash(
                 password, method='sha256')
             if search_user(username, password):
-              return ({'status': 'Username or password already exists. Please modify again'}), 400
+              return ({'status': '?error=Username or password already exists. Please modify again'}), 400
             else :
               add_user(username, email, hashed_password)
-              return ({'status': 'success'}), 200
+              return ({'status': '?success=account create success'}), 200
     else:
         return ({'status': 'fail'}), 400
 
+@user.route('/user/login', method=['GET'])
+def login():
+    username = request.args.get('username')
+    password = request.args.get('password')
+    if username and password :
+      user = search_user(username)
+      if user:
+            if check_password_hash(user.password, password):
+                login_user(user)
+                return ({'status': '?success=login'}), 200
+            else:
+                return ({'status':'?error=incorrect-password'}), 400
+              else:
+            return ({'status':'?error=user-not-found'}), 400
+
+@user.route('/user/logout', method=['GET'])
+@login_required
+  def logout():
+    logout_user()
+    return redirect(url_for('login.show') + '?success=logged-out'), 200
+        
