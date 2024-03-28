@@ -1,14 +1,15 @@
 # ./repo/user_operations.py
 
 import mysql.connector
+import hashlib
 
 
 def connect_to_database():
     config = {
         'host': 'localhost',
-        'user': '',
-        'password': 'your_password',
-        'database': 'your_database',
+        'user': 'root',
+        'password': '901017fer',
+        'database': 'Twitch_API_Repo'
     }
     return mysql.connector.connect(**config)
 
@@ -26,25 +27,26 @@ def fetch_all_users():
     return result
 
 
-def add_user(access_token, username, email, password):
+def add_user(username, email, hash_password):
     connection = connect_to_database()
     cursor = connection.cursor()
 
-    insert_query = 'INSERT INTO users (accesss_token, username, email, password) VALUES (%s, %s, %s, %s)'
+    insert_query = 'INSERT INTO users (username, email, hash_password) VALUES (%s, %s, %s)'
     cursor.execute(insert_query, (
-        access_token,
         username,
         email,
-        password
+        hash_password,
     ))
 
     connection.commit()
     cursor.close()
     connection.close()
 
+
 def search_user(username):
     connection = connect_to_database()
     cursor = connection.cursor()
+    password = cursor['password']
 
     hashed_password = hashlib.sha256(password.encode()).hexdigest()
 
@@ -57,13 +59,14 @@ def search_user(username):
 
     return user
 
-def search_user(username, password):
+
+def search_user_password(username, password):
     connection = connect_to_database()
     cursor = connection.cursor()
 
     hashed_password = hashlib.sha256(password.encode()).hexdigest()
 
-    select_query = 'SELECT * FROM users WHERE username = %s AND password = %s'
+    select_query = 'SELECT * FROM users WHERE username = %s AND hash_password = %s'
     cursor.execute(select_query, (username, hashed_password))
 
     user = cursor.fetchone()

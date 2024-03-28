@@ -2,18 +2,18 @@
 from flask import Blueprint, request
 from service.twitch_service import TwitchService
 from service.Oauth20 import get_access_token
-from flask_login import LoginManager, login_user,login_required, logout_user
-from repo.user_operations import add_user, search_user
+from flask_login import LoginManager, login_user, login_required, logout_user
+from repo.user_operations import add_user, search_user_password
+from werkzeug.security import generate_password_hash
+from werkzeug.security import check_password_hash
 
 user = Blueprint('user', __name__)
 login_manager = LoginManager()
-login_manager.init_app(register)
-login_manager.init_app(login)
-login_manager.init_app(logout)
+login_manager.init_app(user)
+
 
 @user.route('/broadcasters', methods=['GET'])
 def get_broadcaster_id():
-
     """
     get broadcaster id
     Return the user's broadcaster_id by sending a request to the Twitch API using an API
@@ -48,14 +48,13 @@ def get_broadcaster_id():
 
     response = twitch_service.get_broadcaster_id()
     if response is not None:
-        return ({'status': '?success=access Token receive', 'response' : response}),200
+        return ({'status': '?success=access Token receive', 'response': response}), 200
     else:
         return ({'status': '?error = error'}), 404
 
 
 @user.route('/twitch_callback/', methods=['POST'])
 def twitch_callback():
-
     """
     Receive and retrieve the authorization code from OAuth 2.0 to create an account
     As the Authorization code grant flow is used, after the user confirms authorization,
@@ -67,7 +66,7 @@ def twitch_callback():
     produces: application/json
     parameters:
       - name: code
-        in: bdoy
+        in: body
         type: string
         required: true
       - name: user_data
@@ -93,7 +92,8 @@ def twitch_callback():
 
     return ({'status': 'Sign up successfully'}), 200
 
-@user.route('/user/register', methods=['POST'])
+
+@user.route('/register', methods=['POST'])
 def register():
     username = request.form['username']
     email = request.form['email']
@@ -103,33 +103,38 @@ def register():
     if username and email and password and confirm_password:
         if password == confirm_password:
             hashed_password = generate_password_hash(
-                password, method='sha256')
-            if search_user(username, password):
-              return ({'status': '?error=Username or password already exists. Please modify again'}), 400
-            else :
-              add_user(username, email, hashed_password)
-              return ({'status': '?success=account create success'}), 200
+                password, method='pbkdf2:sha256')
+            if search_user_password(username, password):
+                return ({'status': '?error=Username or hash_password already exists. Please modify again'}), 400
+            else:
+                add_user(username, email, hashed_password)
+                return ({'status': '?success=account create success'}), 200
     else:
         return ({'status': 'fail'}), 400
 
-@user.route('/user/login', method=['GET'])
+
+@user.route('/login', methods=['GET'])
 def login():
     username = request.args.get('username')
     password = request.args.get('password')
-    if username and password :
-      user = search_user(username)
-      if user:
+    if username and password:
+        user = search_user(username)
+        if user:
             if check_password_hash(user.password, password):
                 login_user(user)
                 return ({'status': '?success=login'}), 200
             else:
-                return ({'status':'?error=incorrect-password'}), 400
-              else:
-            return ({'status':'?error=user-not-found'}), 400
+                return ({'status': '?error=incorrect-password'}), 400
+        else:
+            return ({'status': '?error=user-not-found'}), 400
 
-@user.route('/user/logout', method=['GET'])
+
+@user.route('/logout', methods=['GET'])
 @login_required
-  def logout():
+def logout():
     logout_user()
-    return redirect(url_for('login.show') + '?success=logged-out'), 200
-        
+    return ({'status': '?success=logut'}), 200
+
+@user.route('/', methods=['POST'])
+def test():
+    return 'user hello world'

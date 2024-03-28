@@ -1,5 +1,4 @@
 from flask_login import UserMixin
-from flask_sqlalchemy import SQLAlchemy
 from repo.user_operations import search_user
 
 
@@ -11,14 +10,14 @@ class Users(UserMixin):
         self.email = user['email']
         self.access_token = user['access_token']
 
-    def get_username():
+    def get_username(self):
         return self.username
-    
-    def get_password():
+
+    def get_password(self):
         return self.password
 
-    def get_email():
+    def get_email(self):
         return self.email
 
-    def get_access_token():
+    def get_access_token(self):
         return self.access_token
