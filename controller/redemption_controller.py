@@ -69,16 +69,16 @@ def get_custom_rewards():
     broadcaster_id = current_user.get_broadcaster_id()
 
     if access_token is None:
-        return ({'error': 'Access Token is required'}, 400)
+        return {'error': 'Please connect to Twitch'}, 401
 
     twitch_service = TwitchService(access_token)
 
     response = twitch_service.get_custom_rewards(broadcaster_id)
 
     if response is not None:
-        return (response)
+        return response
     else:
-        return ({'error': "Error"})
+        return {'error': "Failed to get custom rewards"}, 404
 
 
 @point.route('/rewards-redemption', methods=['GET'])
@@ -135,16 +135,16 @@ def get_Rewards_Redemption():
     rewardID = request.args.get('rewardID')
 
     if access_token is None:
-        return ({'error': 'Access Token is required'}, 400)
+        return {'error': 'Please connect to Twitch'}, 401
 
     twitch_service = TwitchService(access_token)
 
     response = twitch_service.rewards_redemption(broadcaster_id, rewardID)
 
     if response is not None:
-        return ("Success")
+        return response
     else:
-        return ({'error': "Unauthorized error or not logged in. Please authenticate "})
+        return {'error': "Failed to get reward redemptions"}, 404
 
 
 @point.route('/rewards', methods=['POST'])
@@ -243,19 +243,20 @@ def create_custom_rewards():
             }
           }
     """
+    
     access_token = current_user.get_access_token()
     broadcaster_id = current_user.get_broadcaster_id()
     data = request.json
     if access_token is None:
-        return ({'error': 'Access Token is required'}, 400)
+        return {'error': 'Please connect to Twitch'}, 401
 
     twitch_service = TwitchService(access_token)
     response = twitch_service.create_custom_rewards(broadcaster_id, data)
 
     if response is not None:
-        return (response)
+        return response
     else:
-        return ({'error': "Error"})
+        return {'error': "Failed to create custom reward"}, 400
 
 
 @point.route('/rewards/<rewardID>', methods=['DELETE'])
@@ -287,7 +288,7 @@ def delete_rewards(rewardID):
     rewardID = request.args.get('rewardID')
 
     if access_token is None:
-        return ({'error': 'Access Token is required'}, 400)
+        return {'error': 'Please connect to Twitch'}, 401
 
     twitch_service = TwitchService(access_token)
 
@@ -296,7 +297,7 @@ def delete_rewards(rewardID):
     if response is not None:
         return response
     else:
-        return ({'error': "Error"})
+        return {'error': "Failed to delete custom reward"}, 400
 
 
 @point.route('/rewards/<rewardID>', methods=['PATCH'])
@@ -379,7 +380,7 @@ def update_Reward(rewardID):
     broadcaster_id = current_user.get_broadcaster_id()
     data = request.json
     if access_token is None:
-        return ({'error': 'Access Token is required'}, 400)
+        return {'error': 'Please connect to Twitch'}, 401
 
     twitch_service = TwitchService(access_token)
 
@@ -387,4 +388,4 @@ def update_Reward(rewardID):
     if response is not None:
         return response
     else:
-        return ({'error': "Error"})
+        return {'error': "Failed to update custom reward"}, 400

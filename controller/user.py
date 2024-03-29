@@ -44,16 +44,16 @@ def get_broadcaster_id():
     access_token = current_user.get_access_token()
 
     if access_token is None:
-        return ({'status': '?error=Access Token is required'})
+        return ({'error': 'Please connect to Twitch'}, 401)
 
     twitch_service = TwitchService(access_token)
 
     response = twitch_service.get_broadcaster_id()
     if response is not None:
         update_broadcaster_id(current_user.get_id(), response)
-        return ({'status': '?success=broadcasters_id receive and have benn update to database', 'response': response}), 200
+        return {'status': 'Broadcaster_id received and updated to database successfully', 'response': response}, 200
     else:
-        return ({'status': '?error = error'}), 404
+        return {'error': 'Failed to get broadcaster_id'}, 404
 
 
 @user.route('/twitch_callback', methods=['GET'])
@@ -92,12 +92,12 @@ def register():
     if username and email and password and confirm_password:
         if password == confirm_password:
             if search_user_password(username, password):
-                return ({'status': '?error=Username or hash_password already exists. Please modify again'}), 400
+                return {'error': 'User already exists'}, 400
             else:
                 add_user(username, email, password)
-                return ({'status': '?success=account create success'}), 200
+                return {'status': 'Success'}, 200
     else:
-        return ({'status': 'fail'}), 400
+        return {'status': 'Registration failed'}, 400
 
 
 @user.route('/login', methods=['POST'])
@@ -116,16 +116,16 @@ def login():
           user_data[5])
         if user:
             login_user(user)
-            return ({'status': '?success=login'}), 200
+            return {'status': 'Success'}, 200
         else:
-            return ({'status': '?error=user-not-found'}), 400
+            return {'error': 'User not found'}, 404
 
 
 @user.route('/logout', methods=['GET'])
 @login_required
 def logout():
     logout_user()
-    return ({'status': '?success=logut'}), 200
+    return {'status': 'Success'}, 200
 
 
 @login_manager.user_loader
