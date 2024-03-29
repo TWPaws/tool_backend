@@ -66,7 +66,7 @@ def twitch_callback():
     access_token = get_access_token(code)
     result = update_access_toekn(user_id, access_token)
 
-    return (redirect('https://dev.twpaws.live/'))
+    return redirect('/')
 
 
 @user.route('/register', methods=['POST'])
