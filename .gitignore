@@ -11,5 +11,7 @@ dist/
 env/
 venv/
 
+.vscode/
+
 MySQL.sql
 Desktop.sql 
