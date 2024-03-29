@@ -6,7 +6,7 @@ from flask_login import LoginManager, login_user, login_required, logout_user, c
 from repo.user_operations import add_user, search_user_password, update_access_toekn, search_user_id, update_broadcaster_id
 from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
-from model.user_model import Users
+from model.user_model import User
 import json
 
 user = Blueprint('user', __name__)
@@ -94,7 +94,7 @@ def login():
     if username and password:
         user_data = (search_user_password(username, password))
         print(user_data)
-        user = Users(
+        user = User(
           user_data[0],
           user_data[1],
           user_data[2],
@@ -118,7 +118,7 @@ def logout():
 @login_manager.user_loader
 def load_user(user_id):
     user_data = search_user_id(user_id)
-    user = Users(
+    user = User(
           user_data[0],
           user_data[1],
           user_data[2],
