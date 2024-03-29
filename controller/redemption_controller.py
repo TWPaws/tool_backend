@@ -243,11 +243,9 @@ def create_custom_rewards():
             }
           }
     """
-
     access_token = current_user.get_access_token()
     broadcaster_id = current_user.get_broadcaster_id()
-    del data['access_token']
-    del data['broadcaster_id']
+    data = request.json
     if access_token is None:
         return ({'error': 'Access Token is required'}, 400)
 
@@ -317,6 +315,58 @@ def update_Reward(rewardID):
         in: body
         type: string
         required: true
+      - name: title
+        in: body
+        type: string
+        required: false
+      - name: cost
+        in: body
+        type: int64
+        required: false
+      - name: prompt
+        in: body
+        type: string
+        required: false
+      - name: is_enabled
+        in: body
+        type: boolean
+        required: false
+      - name: background_color
+        in: body
+        type: string
+        required: false
+      - name: is_user_input_required
+        in: body
+        type: boolean
+        required: false
+      - name: is_max_per_stream_enabled
+        in: body
+        type: boolean
+        required: false
+      - name: max_per_stream
+        in: body
+        type: integer
+        required: false
+      - name: is_max_per_user_per_stream_enabled
+        in: body
+        type: boolean
+        required: false
+      - name: max_per_user_per_stream
+        in: body
+        type: integer
+        required: false
+      - name: is_global_cooldown_enabled
+        in: body
+        type: boolean
+        required: false
+      - name: global_cooldown_seconds
+        in: body
+        type: integer
+        required: false
+      - name: should_redemptions_skip_request_queue
+        in: body
+        type: boolean
+        required: false
     responses:
       401:
         description: Unauthorized error or not logged in. Please authenticate
@@ -327,8 +377,7 @@ def update_Reward(rewardID):
 
     access_token = current_user.get_access_token()
     broadcaster_id = current_user.get_broadcaster_id()
-    del data['access_token']
-    del data['broadcaster_id']
+    data = request.json
     if access_token is None:
         return ({'error': 'Access Token is required'}, 400)
 
