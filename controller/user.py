@@ -69,19 +69,6 @@ def twitch_callback():
     return (redirect('https://dev.twpaws.live/'))
 
 
-@user.route('/getusername', methods=['GET'])
-def getusername():
-    return current_user.get_username()
-
-@user.route('/getpassword', methods=['GET'])
-def get_password():
-    return current_user.get_password()
-
-@user.route('/getemail', methods=['GET'])
-def get_email():
-    return current_user.get_email()
-
-
 @user.route('/register', methods=['POST'])
 def register():
     username = request.form['username']
