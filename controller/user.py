@@ -64,9 +64,7 @@ def twitch_callback():
     user_id = current_user.get_id()
 
     access_token = get_access_token(code)
-    print(access_token)
     result = update_access_toekn(user_id, access_token)
-    print(result)
 
     return (redirect('https://dev.twpaws.live/'))
 
@@ -102,10 +100,10 @@ def register():
         return ({'status': 'fail'}), 400
 
 
-@user.route('/login', methods=['GET'])
+@user.route('/login', methods=['POST'])
 def login():
-    username = request.args.get('username')
-    password = request.args.get('password')
+    username = request.form['username']
+    password = request.form['password']
     if username and password:
         user_data = (search_user_password(username, password))
         print(user_data)

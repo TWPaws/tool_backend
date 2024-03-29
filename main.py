@@ -17,8 +17,8 @@ app.secret_key = b'c1798eb7bba563e1409fc6d404d98f70a8f22c1e177599849524fb851efa3
 
 
 
-app.register_blueprint(user, url_prefix='/user')
-app.register_blueprint(point, url_prefix='/redemption')
+app.register_blueprint(user, url_prefix='/api/user')
+app.register_blueprint(point, url_prefix='/api/redemption')
 
 
 CORS(app)
