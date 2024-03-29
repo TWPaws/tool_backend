@@ -22,7 +22,7 @@ class TwitchService:
         if response.status_code == 200:
             user = response.json()
 
-            return jsonify({'broadcaster_id': user["data"][0]["id"], 'display_name': user["data"][0]["display_name"]})
+            return user["data"][0]["id"]
         else:
             return None
 

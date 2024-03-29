@@ -64,10 +64,8 @@ def search_user_password(username, password):
     connection = connect_to_database()
     cursor = connection.cursor()
 
-    hashed_password = hashlib.sha256(password.encode()).hexdigest()
-
-    select_query = 'SELECT * FROM users WHERE username = %s AND hash_password = %s'
-    cursor.execute(select_query, (username, hashed_password))
+    select_query = "SELECT * FROM users WHERE username = %s AND hash_password = %s"
+    cursor.execute(select_query, (username, password))
 
     user = cursor.fetchone()
     cursor.close()
@@ -79,13 +77,37 @@ def search_user_id(user_id):
     connection = connect_to_database()
     cursor = connection.cursor()
 
-    hashed_password = hashlib.sha256(password.encode()).hexdigest()
-
     select_query = 'SELECT * FROM users WHERE ID = %s'
-    cursor.execute(select_query, (user_id))
+    cursor.execute(select_query, (user_id,))
 
     user = cursor.fetchone()
     cursor.close()
     connection.close()
 
     return user
+
+def update_broadcaster_id(user_id, boradcaster_id):
+    connection = connect_to_database()
+    cursor = connection.cursor()
+
+    update_query = 'UPDATE users SET boradcaster_id = %s WHERE ID = %s'
+    cursor.execute(update_query, (boradcaster_id, user_id))
+
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+    return 'True'
+
+def update_access_toekn(user_id, access_token):
+    connection = connect_to_database()
+    cursor = connection.cursor()
+    
+    update_query = 'UPDATE users SET access_token = %s WHERE ID = %s'
+    cursor.execute(update_query, (access_token, user_id))
+    
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+    return 'True'

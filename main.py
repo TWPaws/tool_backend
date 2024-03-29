@@ -1,6 +1,6 @@
 from flask import Flask
 from controller.redemption_controller import point
-from controller.user import user
+from controller.user import user, login_manager
 from flask_cors import CORS
 from flasgger import Swagger
 from flask_login import LoginManager
@@ -15,15 +15,15 @@ app.config['SWAGGER'] = {
 
 app.secret_key = b'c1798eb7bba563e1409fc6d404d98f70a8f22c1e177599849524fb851efa34a7'
 
-login_manager = LoginManager()
-login_manager.init_app(app)
+
 
 app.register_blueprint(user, url_prefix='/user')
 app.register_blueprint(point, url_prefix='/redemption')
 
+
 CORS(app)
 Swagger(app)
-
+login_manager.init_app(app)
 
 @app.route('/')
 def hello():

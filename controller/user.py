@@ -1,16 +1,16 @@
 # ./controller/user.py
-from flask import Blueprint, request
+from flask import Blueprint, request, redirect, url_for 
 from service.twitch_service import TwitchService
 from service.Oauth20 import get_access_token
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
-from repo.user_operations import add_user, search_user_password, update_access_toekn, search_user_id
+from repo.user_operations import add_user, search_user_password, update_access_toekn, search_user_id, update_broadcaster_id
 from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
-from controller.user_model import Users
+from model.user_model import Users
+import json
 
 user = Blueprint('user', __name__)
 login_manager = LoginManager()
-login_manager.init_app(user)
 
 
 @user.route('/broadcasters', methods=['GET'])
@@ -41,7 +41,7 @@ def get_broadcaster_id():
           }
     """
 
-    access_token = request.args.get('access_token')
+    access_token = current_user.get_access_token()
 
     if access_token is None:
         return ({'status': '?error=Access Token is required'})
@@ -50,50 +50,38 @@ def get_broadcaster_id():
 
     response = twitch_service.get_broadcaster_id()
     if response is not None:
-        return ({'status': '?success=access Token receive', 'response': response}), 200
+        update_broadcaster_id(current_user.get_id(), response)
+        return ({'status': '?success=broadcasters_id receive and have benn update to database', 'response': response}), 200
     else:
         return ({'status': '?error = error'}), 404
 
 
-@user.route('/twitch_callback/', methods=['POST'])
-@login_required
+@user.route('/twitch_callback', methods=['GET'])
 def twitch_callback():
-    """
-    Receive and retrieve the authorization code from OAuth 2.0 to create an account
-    As the Authorization code grant flow is used, after the user confirms authorization,
-    redirect back to this link and use the authorization code to retrieve the user's credentials from the OAuth API,
-    then store them in the database to create an account
-    ---
-    tags:
-      - user
-    produces: application/json
-    parameters:
-      - name: code
-        in: body
-        type: string
-        required: true
-      - name: user_data
-        in: body
-        type: array
-        required: true
-    responses:
-      401:
-        description: Unauthorized error or not logged in. Please authenticate
-      200:
-        description: Sign Up sccuess
-        examples: "Sign up successfully"
-    """
-
-    data = request.json
-    code = data.get('code')
-    username = current_user.username
-
+    code = request.args.get('code')
     print("Received code:", code)
 
-    access_token = get_access_token(code)
-    update_access_toekn(username, access_token)
+    user_id = current_user.get_id()
 
-    return ({'status': 'Sign up successfully'}), 200
+    access_token = get_access_token(code)
+    print(access_token)
+    result = update_access_toekn(user_id, access_token)
+    print(result)
+
+    return (redirect('https://dev.twpaws.live/'))
+
+
+@user.route('/getusername', methods=['GET'])
+def getusername():
+    return current_user.get_username()
+
+@user.route('/getpassword', methods=['GET'])
+def get_password():
+    return current_user.get_password()
+
+@user.route('/getemail', methods=['GET'])
+def get_email():
+    return current_user.get_email()
 
 
 @user.route('/register', methods=['POST'])
@@ -105,35 +93,32 @@ def register():
 
     if username and email and password and confirm_password:
         if password == confirm_password:
-            hashed_password = generate_password_hash(
-                password, method='pbkdf2:sha256')
             if search_user_password(username, password):
                 return ({'status': '?error=Username or hash_password already exists. Please modify again'}), 400
             else:
-                add_user(username, email, hashed_password)
+                add_user(username, email, password)
                 return ({'status': '?success=account create success'}), 200
     else:
         return ({'status': 'fail'}), 400
 
 
-@user.route('/login', methods=['POST'])
+@user.route('/login', methods=['GET'])
 def login():
-    username = request.form('username')
-    password = request.form('password')
+    username = request.args.get('username')
+    password = request.args.get('password')
     if username and password:
-        user_data = search_user_password(username, password)
+        user_data = (search_user_password(username, password))
+        print(user_data)
         user = Users(
-          user_data['id'],
-          user_data['username'],
-          user_data['password'],
-          user_data['email'],
-          user_data['access_token'])
+          user_data[0],
+          user_data[1],
+          user_data[2],
+          user_data[3],
+          user_data[4],
+          user_data[5])
         if user:
-            if check_password_hash(user.password, password):
-                login_user(user)
-                return ({'status': '?success=login'}), 200
-            else:
-                return ({'status': '?error=incorrect-password'}), 400
+            login_user(user)
+            return ({'status': '?success=login'}), 200
         else:
             return ({'status': '?error=user-not-found'}), 400
 
@@ -149,9 +134,10 @@ def logout():
 def load_user(user_id):
     user_data = search_user_id(user_id)
     user = Users(
-          user_data['id'],
-          user_data['username'],
-          user_data['password'],
-          user_data['email'],
-          user_data['access_token'])
+          user_data[0],
+          user_data[1],
+          user_data[2],
+          user_data[3],
+          user_data[4],
+          user_data[5])
     return user

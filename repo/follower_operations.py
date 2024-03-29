@@ -29,9 +29,7 @@ def fetch_all_users():
 def add_user(user_data):
     connection = connect_to_database()
     cursor = connection.cursor()
-
-    # 假設 user_data 包含欲插入的使用者資料
-    # 假設欄位包括 id、username、email 等等
+    
 
     insert_query = 'INSERT INTO users (id, username, email) VALUES (%s, %s, %s)'
     cursor.execute(insert_query, (user_data['id'], user_data['username'], user_data['email']))

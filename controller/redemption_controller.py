@@ -65,8 +65,8 @@ def get_custom_rewards():
             }]
     """
 
-    access_token = request.args.get('access_token')
-    broadcaster_id = request.args.get('broadcaster_id')
+    access_token = current_user.get_access_token()
+    broadcaster_id = current_user.get_broadcaster_id()
 
     if access_token is None:
         return ({'error': 'Access Token is required'}, 400)
@@ -82,6 +82,7 @@ def get_custom_rewards():
 
 
 @point.route('/rewards-redemption', methods=['GET'])
+@login_required
 def get_Rewards_Redemption():
 
     """
@@ -129,8 +130,8 @@ def get_Rewards_Redemption():
           }
     """
 
-    access_token = request.args.get('access_token')
-    broadcaster_id = request.args.get('broadcaster_id')
+    access_token = current_user.get_access_token()
+    broadcaster_id = current_user.get_broadcaster_id()
     rewardID = request.args.get('rewardID')
 
     if access_token is None:
@@ -147,6 +148,7 @@ def get_Rewards_Redemption():
 
 
 @point.route('/rewards', methods=['POST'])
+@login_required
 def create_custom_rewards():
 
     """
@@ -242,9 +244,8 @@ def create_custom_rewards():
           }
     """
 
-    data = request.json
-    access_token = data.get('access_token')
-    broadcaster_id = data.get('broadcaster_id')
+    access_token = current_user.get_access_token()
+    broadcaster_id = current_user.get_broadcaster_id()
     del data['access_token']
     del data['broadcaster_id']
     if access_token is None:
@@ -260,6 +261,7 @@ def create_custom_rewards():
 
 
 @point.route('/rewards/<rewardID>', methods=['DELETE'])
+@login_required
 def delete_rewards(rewardID):
 
     """
@@ -282,8 +284,8 @@ def delete_rewards(rewardID):
         examples: "Success"
     """
 
-    access_token = request.args.get('access_token')
-    broadcaster_id = request.args.get('broadcaster_id')
+    access_token = current_user.get_access_token()
+    broadcaster_id = current_user.get_broadcaster_id()
     rewardID = request.args.get('rewardID')
 
     if access_token is None:
@@ -300,6 +302,7 @@ def delete_rewards(rewardID):
 
 
 @point.route('/rewards/<rewardID>', methods=['PATCH'])
+@login_required
 def update_Reward(rewardID):
 
     """
@@ -322,9 +325,8 @@ def update_Reward(rewardID):
         examples: "Success"
     """
 
-    data = request.json
-    access_token = data.get('access_token')
-    broadcaster_id = data.get('broadcaster_id')
+    access_token = current_user.get_access_token()
+    broadcaster_id = current_user.get_broadcaster_id()
     del data['access_token']
     del data['broadcaster_id']
     if access_token is None:

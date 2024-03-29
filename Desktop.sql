@@ -16,6 +16,8 @@ CREATE TABLE users (
 INSERT INTO users (username, email, hash_password, access_token, boradcaster_id) 
 VALUES ('john_doe', 'john@example.com', 'hashed_password123', '', '');
 
+UPDATE users SET broadcaster_id = 'new_broadcaster_id' WHERE id = 'your_user_id';
+
 CREATE TABLE channel_VIP_follower (
     ID INT PRIMARY KEY AUTO_INCREMENT,
     broadcaster_id INT,
@@ -33,6 +35,10 @@ CREATE TABLE channel_MOD_follower (
 show tables;
 
 select * from users;
+
+SELECT * FROM users WHERE username = 'benson' and hash_password = '28627344';
+
+UPDATE users SET access_token = '6mp6ju1bnrid8t3hjpg7nx8ulfhq5c' WHERE ID = '1';
 
 DROP TABLE users ;
 
