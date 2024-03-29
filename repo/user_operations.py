@@ -74,3 +74,18 @@ def search_user_password(username, password):
     connection.close()
 
     return user
+
+def search_user_id(user_id):
+    connection = connect_to_database()
+    cursor = connection.cursor()
+
+    hashed_password = hashlib.sha256(password.encode()).hexdigest()
+
+    select_query = 'SELECT * FROM users WHERE ID = %s'
+    cursor.execute(select_query, (user_id))
+
+    user = cursor.fetchone()
+    cursor.close()
+    connection.close()
+
+    return user

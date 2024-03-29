@@ -1,14 +1,13 @@
 from flask_login import UserMixin
-from repo.user_operations import search_user
 
 
 class Users(UserMixin):
-    def __init__(self, username, password):
-        user = search_user(username, password)
-        self.username = user['username']
-        self.password = user['password']
-        self.email = user['email']
-        self.access_token = user['access_token']
+    def __init__(self, id, username, password, email, access_token):
+        self.id = id
+        self.username = username
+        self.password = password
+        self.email = email
+        self.access_token = access_token
 
     def get_username(self):
         return self.username
@@ -21,3 +20,15 @@ class Users(UserMixin):
 
     def get_access_token(self):
         return self.access_token
+
+    def is_authenticated(self):
+        return True
+
+    def is_active(self):
+        return True
+
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        return str(self.id)

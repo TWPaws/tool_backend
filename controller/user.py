@@ -2,10 +2,11 @@
 from flask import Blueprint, request
 from service.twitch_service import TwitchService
 from service.Oauth20 import get_access_token
-from flask_login import LoginManager, login_user, login_required, logout_user
-from repo.user_operations import add_user, search_user_password
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+from repo.user_operations import add_user, search_user_password, update_access_toekn, search_user_id
 from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
+from controller.user_model import Users
 
 user = Blueprint('user', __name__)
 login_manager = LoginManager()
@@ -13,6 +14,7 @@ login_manager.init_app(user)
 
 
 @user.route('/broadcasters', methods=['GET'])
+@login_required
 def get_broadcaster_id():
     """
     get broadcaster id
@@ -54,6 +56,7 @@ def get_broadcaster_id():
 
 
 @user.route('/twitch_callback/', methods=['POST'])
+@login_required
 def twitch_callback():
     """
     Receive and retrieve the authorization code from OAuth 2.0 to create an account
@@ -83,12 +86,12 @@ def twitch_callback():
 
     data = request.json
     code = data.get('code')
-    user_data = data.get('user_data')
+    username = current_user.username
 
     print("Received code:", code)
 
     access_token = get_access_token(code)
-    add_user(user_data, access_token)
+    update_access_toekn(username, access_token)
 
     return ({'status': 'Sign up successfully'}), 200
 
@@ -113,12 +116,18 @@ def register():
         return ({'status': 'fail'}), 400
 
 
-@user.route('/login', methods=['GET'])
+@user.route('/login', methods=['POST'])
 def login():
-    username = request.args.get('username')
-    password = request.args.get('password')
+    username = request.form('username')
+    password = request.form('password')
     if username and password:
-        user = search_user(username)
+        user_data = search_user_password(username, password)
+        user = Users(
+          user_data['id'],
+          user_data['username'],
+          user_data['password'],
+          user_data['email'],
+          user_data['access_token'])
         if user:
             if check_password_hash(user.password, password):
                 login_user(user)
@@ -135,6 +144,14 @@ def logout():
     logout_user()
     return ({'status': '?success=logut'}), 200
 
-@user.route('/', methods=['POST'])
-def test():
-    return 'user hello world'
+
+@login_manager.user_loader
+def load_user(user_id):
+    user_data = search_user_id(user_id)
+    user = Users(
+          user_data['id'],
+          user_data['username'],
+          user_data['password'],
+          user_data['email'],
+          user_data['access_token'])
+    return user

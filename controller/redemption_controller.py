@@ -1,11 +1,13 @@
 # ./controller/redemption_controller.py
 from flask import Blueprint, request
 from service.twitch_service import TwitchService
+from flask_login import LoginManager, login_required, current_user
 
 point = Blueprint('point', __name__)
 
 
 @point.route('/rewards', methods=['GET'])
+@login_required
 def get_custom_rewards():
 
     """
