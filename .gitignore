@@ -1,2 +1,15 @@
+*.py[cod]
+__pycache__/
+*$py.class
+
+.Python
+build/
+dist/
+
+.env
+.venv
+env/
+venv/
+
 MySQL.sql
 Desktop.sql 
