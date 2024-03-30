@@ -82,7 +82,7 @@ def register():
             if search_user_password(username, password):
                 return {'error': 'User already exists'}, 400
             else:
-                add_user(username, email, password)
+                add_user(nickname, username, email, password)
                 return {'status': 'Success'}, 200
     else:
         return {'status': 'Registration failed'}, 400
