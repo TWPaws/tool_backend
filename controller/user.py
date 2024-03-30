@@ -132,9 +132,9 @@ def load_user(user_id):
 @user.route('/status', methods=['GET'])
 @login_required
 def status():
-    if validate_access_token(current.access_token) :
-        return {'nickname' : f'{current.nickname}', 'status' : 'access_token is valid'}, 200
+    if validate_access_token(current_user.access_token) :
+        return {'nickname' : f'{current_user.nickname}', 'status' : 'access_token is valid'}, 200
     else :
-        return {'nickname' : f'{current.nickname}', 'status' : 'access_token has to be refresh'}, 404
+        return {'nickname' : f'{current_user.nickname}', 'status' : 'access_token has to be refresh'}, 404
 
     
