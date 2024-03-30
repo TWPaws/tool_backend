@@ -17,7 +17,7 @@ def fetch_all_users():
     return result
 
 
-def add_user(username, email, hash_password):
+def add_user(nickname, username, email, hash_password):
     connection = connect_to_database()
     cursor = connection.cursor()
 
