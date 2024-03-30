@@ -13,4 +13,4 @@ venv/
 
 .vscode/
 
-secret
+secret.ini
