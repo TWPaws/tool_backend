@@ -1,6 +1,6 @@
 # ./controller/user.py
 from flask import Blueprint, request, redirect, current_app
-from service.twitch_service import TwitchService
+from service.twitch_service import TwitchService, validate
 from service.Oauth20 import get_access_token
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from repo.user_operations import add_user, search_user_password, update_access_toekn, search_user_id, update_broadcaster_id
@@ -130,16 +130,12 @@ def load_user(user_id):
           user_data[6])
     return user
 
-@user.route('/getnickname', methods=['GET'])
+@user.route('/status', methods=['GET'])
 @login_required
-def getnickname():
-    return {'nickname': f'{current.nickname}'}
-
-@user.route('/is_access_token', methods=['GET'])
-@login_required
-def is_access_token():
-    if current.access_token :
-        return 200
+def status():
+    if validate_access_token(current.access_token) :
+        return {'nickname' : f'{current.nickname}', 'status' : 'access_token is valid'}, 200
     else :
-        return 404
+        return {'nickname' : f'{current.nickname}', 'status' : 'access_token has to be refresh'}, 404
+
     

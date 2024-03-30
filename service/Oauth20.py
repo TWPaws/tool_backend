@@ -20,3 +20,20 @@ def get_access_token(authorization_code):
     response = req.post(url, data=data)
     data = response.json()
     return data["access_token"]
+
+def validate_access_token(access_token):
+    headers = {
+        'Authorization': f'OAuth {self.access_token}',
+    }
+
+    url = 'https://id.twitch.tv/oauth2/validate'
+    
+    response = req.get(
+       url,
+       headers=headers 
+    )
+
+    if response.status_code == 200:
+        return True
+    else :
+        return False
