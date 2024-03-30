@@ -103,6 +103,7 @@ class TwitchService:
         query = f'broadcaster_id={broadcaster_id}&id={reward_id}'
 
         response = req.delete(self.base_url + path + query, headers=headers)
+        print(response.text)
 
         if response.status_code == 204:
             return {'status': 'success'}
