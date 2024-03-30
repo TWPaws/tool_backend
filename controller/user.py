@@ -64,7 +64,7 @@ def twitch_callback():
     user_id = current_user.get_id()
 
     access_token = get_access_token(code)
-    result = update_access_toekn(user_id, access_token)
+    update_access_toekn(user_id, access_token)
 
     return redirect('/')
 
