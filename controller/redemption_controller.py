@@ -385,7 +385,7 @@ def update_Reward():
     twitch_service = TwitchService(access_token)
     reward_ID = data.get('reward_ID')
 
-    response = twitch_service.update_Reward(broadcaster_id, rewardID, data)
+    response = twitch_service.update_Reward(broadcaster_id, reward_ID, data)
     if response is not None:
         return response
     else:
