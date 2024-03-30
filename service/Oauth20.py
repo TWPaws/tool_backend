@@ -2,7 +2,7 @@
 
 import requests as req
 import config as cfg
-from flask import current_app
+from flask import current_app   
 
 
 def get_access_token(authorization_code):
@@ -10,6 +10,11 @@ def get_access_token(authorization_code):
     client_id = cfg.client_id
     client_secret = cfg.client_secret
     redirect_url = cfg.redirect_url
+    
+    current_app.logger.debug(url)
+    current_app.logger.debug(client_id)
+    current_app.logger.debug(client_secret)
+    current_app.logger.debug(redirect_url)
 
     data = {
         'client_id': client_id,
@@ -19,7 +24,6 @@ def get_access_token(authorization_code):
         'redirect_url': redirect_url
     }
     response = req.post(url, data=data)
-    current_app.logger.debug(response.json)
     data = response.json()
     return data["access_token"]
 
