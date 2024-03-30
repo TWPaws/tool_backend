@@ -112,7 +112,7 @@ class TwitchService:
 
     def update_Reward(self, broadcaster_id, reward_id, data):
         headers = {
-            'Client-ID': 'fhc0ko2asch2gf7ya4ame220yahpka',
+            'Client-ID': self.client_id,
             'Authorization': f'Bearer {self.access_token}',
             'Content-Type': 'application/json'
         }
