@@ -1,7 +1,7 @@
 # ./controller/user.py
 from flask import Blueprint, request, redirect, current_app
-from service.twitch_service import TwitchService, validate
-from service.Oauth20 import get_access_token
+from service.twitch_service import TwitchService
+from service.Oauth20 import get_access_token, validate_access_token
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from repo.user_operations import add_user, search_user_password, update_access_toekn, search_user_id, update_broadcaster_id
 from werkzeug.security import generate_password_hash
