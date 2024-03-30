@@ -1,13 +1,14 @@
 # ./service/Oauth20.py
 
 import requests as req
+import config as cfg
 
 
 def get_access_token(authorization_code):
-    url = 'https://id.twitch.tv/oauth2/token'
-    client_id = 'ecmnwqtzoa9c67bhtjunt7ne2vrog0'
-    client_secret = 'ogp3p9w1jcymu84ipoik9t2y2fy7en'
-    redirect_uri = 'https://dev.twpaws.live/api/user/twitch_callback'
+    url = cfg.oauth20_url
+    client_id = cfg.client_id
+    client_secret = cfg.client_secret
+    redirect_uri = cfg.redirect_uri
 
     data = {
         'client_id': client_id,
@@ -26,7 +27,7 @@ def validate_access_token(access_token):
         'Authorization': f'OAuth {self.access_token}',
     }
 
-    url = 'https://id.twitch.tv/oauth2/validate'
+    url = cfg.oauth20_valid
     
     response = req.get(
        url,

@@ -11,8 +11,8 @@ database_user = config['Database']['user']
 database_password = config['Database']['password']
 database_name = config['Database']['database']
 
-oauth20_url = config['Oauth20_URL']['Oauth20_URL']
-redirect_uri = config['Oauth20_URL']['redirect_uri']
+oauth20_url = config['Oauth20_URL']['Oauth20_url']
+redirect_url = config['Oauth20_URL']['redirect_url']
 oauth20_valid = config['Oauth20_URL']['Oauth20_valid']
 twitch_api = config['Oauth20_URL']['Twitch_API']
 client_id = config['Oauth20_URL']['client_id']
@@ -36,7 +36,7 @@ print("Database Client ID:", client_id)
 print("Database Client Secret:", client_secret)
 
 print("OAuth 2.0 URL:", oauth20_url)
-print("Redirect URI:", redirect_uri)
+print("Redirect url:", redirect_url)
 print("OAuth 2.0 Validation URL:", oauth20_valid)
 print("Twitch API URL:", twitch_api)
 

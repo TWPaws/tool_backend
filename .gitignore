@@ -13,4 +13,4 @@ venv/
 
 .vscode/
 
-secert.ini
+secret
