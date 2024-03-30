@@ -1,5 +1,5 @@
 # ./controller/user.py
-from flask import Blueprint, request, redirect, url_for 
+from flask import Blueprint, request, redirect, current_app
 from service.twitch_service import TwitchService
 from service.Oauth20 import get_access_token
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
@@ -59,7 +59,7 @@ def get_broadcaster_id():
 @user.route('/twitch_callback', methods=['GET'])
 def twitch_callback():
     code = request.args.get('code')
-    print("Received code:", code)
+    current_app.logger.debug("Received code:", code)
 
     user_id = current_user.get_id()
 
@@ -93,7 +93,7 @@ def login():
     password = request.form['password']
     if username and password:
         user_data = (search_user_password(username, password))
-        print(user_data)
+        current_app.logger.debug(user_data)
         user = User(
           user_data[0],
           user_data[1],
