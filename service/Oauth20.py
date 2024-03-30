@@ -2,6 +2,7 @@
 
 import requests as req
 import config as cfg
+from flask import current_app
 
 
 def get_access_token(authorization_code):
