@@ -13,6 +13,4 @@ venv/
 
 .vscode/
 
-MySQL.sql
-Desktop.sql 
-util/
+secert.ini

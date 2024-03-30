@@ -94,7 +94,6 @@ def login():
     password = request.form['password']
     if username and password:
         user_data = (search_user_password(username, password))
-        current_app.logger.debug(user_data)
         user = User(
           user_data[0],
           user_data[1],

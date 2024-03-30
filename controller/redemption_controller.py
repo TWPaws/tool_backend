@@ -259,9 +259,9 @@ def create_custom_rewards():
         return {'error': "Failed to create custom reward"}, 400
 
 
-@point.route('/rewards', methods=['DELETE'])
+@point.route('/rewards/<reward_id>', methods=['DELETE'])
 @login_required
-def delete_rewards():
+def delete_rewards(reward_id):
 
     """
     Delete custom rewards
@@ -285,7 +285,7 @@ def delete_rewards():
 
     access_token = current_user.access_token
     broadcaster_id = current_user.broadcaster_id
-    rewardID = request.form['rewardID']
+    rewardID = reward_id
 
     if access_token is None:
         return {'error': 'Please connect to Twitch'}, 401

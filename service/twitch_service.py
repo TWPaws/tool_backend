@@ -30,8 +30,8 @@ class TwitchService:
             "Authorization": f'Bearer {self.access_token}',
             "Client-ID": self.client_id
         }
-        path = 'channel_points/custom_rewards?'
-        query = f'broadcaster_id={broadcaster_id}&only_manageable_rewards=True'
+        path = 'channel_points/custom_rewards'
+        query = f'?broadcaster_id={broadcaster_id}&only_manageable_rewards=True'
         response = req.get(
             self.base_url + path + query,
             headers=headers
@@ -55,9 +55,9 @@ class TwitchService:
             "Client-ID": self.client_id
         }
 
-        path = 'channel_points/custom_rewards/redemptions?'
+        path = 'channel_points/custom_rewards/redemptions'
         query = (
-            f'broadcaster_id={broadcaster_id}&'
+            f'?broadcaster_id={broadcaster_id}&'
             f'reward_id={reward_id}&'
             f'status=UNFULFILLED'
         )
@@ -81,10 +81,12 @@ class TwitchService:
             'Content-Type': 'application/json'
         }
 
-        query = f'channel_points/custom_rewards?broadcaster_id={broadcaster_id}'
-        print(data)
+        path = f'channel_points/custom_rewards'
+        query = {
+            f'?broadcaster_id={broadcaster_id}'
+        }
         response = req.post(
-            self.base_url + query,
+            self.base_url + path + query,
             headers=headers,
             json=data
         )
@@ -99,8 +101,8 @@ class TwitchService:
             'Authorization': f'Bearer {self.access_token}',
         }
 
-        path = 'channel_points/custom_rewards?'
-        query = f'broadcaster_id={broadcaster_id}&id={reward_id}'
+        path = 'channel_points/custom_rewards'
+        query = f'?broadcaster_id={broadcaster_id}&id={reward_id}'
 
         response = req.delete(self.base_url + path + query, headers=headers)
         current_app.logger.debug(response.text)
