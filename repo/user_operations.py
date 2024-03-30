@@ -2,17 +2,7 @@
 
 import mysql.connector
 import hashlib
-
-
-def connect_to_database():
-    config = {
-        'host': 'localhost',
-        'user': 'root',
-        'password': '901017fer',
-        'database': 'Twitch_API_Repo'
-    }
-    return mysql.connector.connect(**config)
-
+from util.database import connect_to_database
 
 def fetch_all_users():
     connection = connect_to_database()
