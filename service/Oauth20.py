@@ -17,8 +17,8 @@ def get_access_token(authorization_code):
         'grant_type': 'authorization_code',
         'redirect_url': redirect_url
     }
-    print(response.text)
     response = req.post(url, data=data)
+    print(response.text)
     data = response.json()
     return data["access_token"]
 
