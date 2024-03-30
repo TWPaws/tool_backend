@@ -2,13 +2,14 @@
 
 import requests as req
 from flask import current_app
+import config as cfg
 
 class TwitchService:
-    base_url = 'https://api.twitch.tv/helix/'
+    base_url = cfg.twitch_api
 
     def __init__(self, access_token):
         self.access_token = access_token
-        self.client_id = 'ecmnwqtzoa9c67bhtjunt7ne2vrog0'
+        self.client_id = cfg.client_id
 
     def get_broadcaster_id(self):
         headers = {
@@ -30,7 +31,7 @@ class TwitchService:
             "Authorization": f'Bearer {self.access_token}',
             "Client-ID": self.client_id
         }
-        path = 'channel_points/custom_rewards'
+        path = cfg.get_custom_rewards
         query = f'?broadcaster_id={broadcaster_id}&only_manageable_rewards=True'
         response = req.get(
             self.base_url + path + query,
@@ -55,7 +56,7 @@ class TwitchService:
             "Client-ID": self.client_id
         }
 
-        path = 'channel_points/custom_rewards/redemptions'
+        path = cfg.rewards_redemption
         query = (
             f'?broadcaster_id={broadcaster_id}&'
             f'reward_id={reward_id}&'
@@ -81,7 +82,7 @@ class TwitchService:
             'Content-Type': 'application/json'
         }
 
-        path = f'channel_points/custom_rewards'
+        path = cfg.create_custom_reward
         query = {
             f'?broadcaster_id={broadcaster_id}'
         }
@@ -101,7 +102,7 @@ class TwitchService:
             'Authorization': f'Bearer {self.access_token}',
         }
 
-        path = 'channel_points/custom_rewards'
+        path = cfg.delete_reward
         query = f'?broadcaster_id={broadcaster_id}&id={reward_id}'
 
         response = req.delete(self.base_url + path + query, headers=headers)
@@ -119,7 +120,7 @@ class TwitchService:
             'Content-Type': 'application/json'
         }
 
-        path = 'channel_points/custom_rewards'
+        path = cfg.update_reward
         query = f'?broadcaster_id={broadcaster_id}&id={reward_id}'
 
         response = req.patch(
