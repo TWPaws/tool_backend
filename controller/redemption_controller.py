@@ -383,6 +383,7 @@ def update_Reward():
         return {'error': 'Please connect to Twitch'}, 401
 
     twitch_service = TwitchService(access_token)
+    reward_ID = data.get('reward_ID')
 
     response = twitch_service.update_Reward(broadcaster_id, rewardID, data)
     if response is not None:
