@@ -65,8 +65,8 @@ def get_custom_rewards():
             }]
     """
 
-    access_token = current_user.get_access_token()
-    broadcaster_id = current_user.get_broadcaster_id()
+    access_token = current_user.access_token
+    broadcaster_id = current_user.broadcaster_id
 
     if access_token is None:
         return {'error': 'Please connect to Twitch'}, 401
@@ -130,8 +130,8 @@ def get_Rewards_Redemption():
           }
     """
 
-    access_token = current_user.get_access_token()
-    broadcaster_id = current_user.get_broadcaster_id()
+    access_token = current_user.access_token
+    broadcaster_id = current_user.broadcaster_id
     rewardID = request.args.get('rewardID')
 
     if access_token is None:
@@ -244,8 +244,8 @@ def create_custom_rewards():
           }
     """
     
-    access_token = current_user.get_access_token()
-    broadcaster_id = current_user.get_broadcaster_id()
+    access_token = current_user.access_token
+    broadcaster_id = current_user.broadcaster_id
     data = request.json
     if access_token is None:
         return {'error': 'Please connect to Twitch'}, 401
@@ -283,8 +283,8 @@ def delete_rewards(rewardID):
         examples: "Success"
     """
 
-    access_token = current_user.get_access_token()
-    broadcaster_id = current_user.get_broadcaster_id()
+    access_token = current_user.access_token
+    broadcaster_id = current_user.broadcaster_id
     rewardID = request.args.get('rewardID')
 
     if access_token is None:
@@ -376,8 +376,8 @@ def update_Reward(rewardID):
         examples: "Success"
     """
 
-    access_token = current_user.get_access_token()
-    broadcaster_id = current_user.get_broadcaster_id()
+    access_token = current_user.access_token
+    broadcaster_id = current_user.broadcaster_id
     data = request.json
     if access_token is None:
         return {'error': 'Please connect to Twitch'}, 401

@@ -41,7 +41,7 @@ def get_broadcaster_id():
           }
     """
 
-    access_token = current_user.get_access_token()
+    access_token = current_user.access_token
 
     if access_token is None:
         return ({'error': 'Please connect to Twitch'}, 401)
