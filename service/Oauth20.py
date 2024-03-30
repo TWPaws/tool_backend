@@ -9,7 +9,7 @@ def get_access_token(authorization_code):
     url = cfg.oauth20_url
     client_id = cfg.client_id
     client_secret = cfg.client_secret
-    redirect_url = 'https://www.twpaws.live/api/user/twitch_callback'
+    redirect_url = cfg.redirect_url
     
     current_app.logger.debug(url)
     current_app.logger.debug(client_id)
@@ -21,7 +21,7 @@ def get_access_token(authorization_code):
         'client_secret': client_secret,
         'code': authorization_code,
         'grant_type': 'authorization_code',
-        'redirect_url': redirect_url
+        'redirect_uri': redirect_url
     }
     response = req.post(url, data=data)
     current_app.logger.debug(response.text)
