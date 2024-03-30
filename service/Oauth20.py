@@ -8,14 +8,14 @@ def get_access_token(authorization_code):
     url = cfg.oauth20_url
     client_id = cfg.client_id
     client_secret = cfg.client_secret
-    redirect_uri = cfg.redirect_uri
+    redirect_url = cfg.redirect_url
 
     data = {
         'client_id': client_id,
         'client_secret': client_secret,
         'code': authorization_code,
         'grant_type': 'authorization_code',
-        'redirect_uri': redirect_uri
+        'redirect_url': redirect_url
     }
 
     response = req.post(url, data=data)
