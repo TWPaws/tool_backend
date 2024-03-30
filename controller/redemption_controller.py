@@ -300,9 +300,9 @@ def delete_rewards():
         return {'error': "Failed to delete custom reward"}, 400
 
 
-@point.route('/rewards/<rewardID>', methods=['PATCH'])
+@point.route('/rewards', methods=['PATCH'])
 @login_required
-def update_Reward(rewardID):
+def update_Reward():
 
     """
     Update custom rewards List
