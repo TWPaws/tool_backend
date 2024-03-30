@@ -125,6 +125,8 @@ class TwitchService:
             headers=headers,
             json=data
         )
+
+        current_app.logger.debug(response.text)
         if response.status_code == 200:
             return response.json()
         else:
