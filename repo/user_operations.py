@@ -3,6 +3,7 @@
 import mysql.connector
 import hashlib
 from util.database import connect_to_database
+from flask import current_app  
 
 def fetch_all_users():
     connection = connect_to_database()
