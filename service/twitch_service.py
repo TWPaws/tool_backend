@@ -1,7 +1,7 @@
 # ./service/twitch_service.py
 
 import requests as req
-import current_app
+from flask import current_app
 
 class TwitchService:
     base_url = 'https://api.twitch.tv/helix/'
