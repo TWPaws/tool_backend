@@ -4,7 +4,7 @@ import configparser
 config = configparser.ConfigParser()
 
 config.sections()
-config.read('secert.ini', encoding='utf-8')
+config.read('secret.ini', encoding='utf-8')
 
 
 database_user = config['Database']['user']

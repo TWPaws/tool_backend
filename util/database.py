@@ -1,11 +1,11 @@
 import mysql.connector
-import config
+import config as cfg
 
 def connect_to_database():
     config = {
         'host': 'localhost',
-        'user': config.database_user,
-        'password': 'LSCSz2tpzvNESyv',
-        'database': 'Twitch_API_Repo'
+        'user': cf.database_user,
+        'password': cfg.database_password,
+        'database': cfg.database_name
     }
     return mysql.connector.connect(**config)
