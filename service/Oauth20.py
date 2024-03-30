@@ -30,7 +30,7 @@ def get_access_token(authorization_code):
 
 def validate_access_token(access_token):
     headers = {
-        'Authorization': f'OAuth {self.access_token}',
+        'Authorization': f'OAuth {access_token}',
     }
 
     url = cfg.oauth20_valid
