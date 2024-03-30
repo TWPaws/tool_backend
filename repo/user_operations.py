@@ -21,8 +21,9 @@ def add_user(username, email, hash_password):
     connection = connect_to_database()
     cursor = connection.cursor()
 
-    insert_query = 'INSERT INTO users (username, email, hash_password) VALUES (%s, %s, %s)'
+    insert_query = 'INSERT INTO users (nickname, username, email, hash_password) VALUES (%s, %s, %s, %s)'
     cursor.execute(insert_query, (
+        nickname,
         username,
         email,
         hash_password,

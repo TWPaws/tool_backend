@@ -71,12 +71,13 @@ def twitch_callback():
 
 @user.route('/register', methods=['POST'])
 def register():
+    nickname = request.form['nickname']
     username = request.form['username']
     email = request.form['email']
     password = request.form['password']
     confirm_password = request.form['confirm-password']
 
-    if username and email and password and confirm_password:
+    if nickname and username and email and password and confirm_password:
         if password == confirm_password:
             if search_user_password(username, password):
                 return {'error': 'User already exists'}, 400
@@ -100,7 +101,8 @@ def login():
           user_data[2],
           user_data[3],
           user_data[4],
-          user_data[5])
+          user_data[5],
+          user_data[6])
         if user:
             login_user(user)
             return {'status': 'Success'}, 200
@@ -124,5 +126,20 @@ def load_user(user_id):
           user_data[2],
           user_data[3],
           user_data[4],
-          user_data[5])
+          user_data[5],
+          user_data[6])
     return user
+
+@user.route('/getnickname', methods=['GET'])
+@login_required
+def getnickname():
+    return {'nickname': f'{current.nickname}'}
+
+@user.route('/is_access_token', methods=['GET'])
+@login_required
+def is_access_token():
+    if current.access_token :
+        return 200
+    else :
+        return 404
+    
