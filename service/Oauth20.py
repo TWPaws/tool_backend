@@ -24,6 +24,7 @@ def get_access_token(authorization_code):
         'redirect_url': redirect_url
     }
     response = req.post(url, data=data)
+    current_app.logger.debug(response.text)
     data = response.json()
     return data["access_token"]
 
