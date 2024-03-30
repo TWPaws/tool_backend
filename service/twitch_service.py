@@ -31,7 +31,7 @@ class TwitchService:
             "Authorization": f'Bearer {self.access_token}',
             "Client-ID": self.client_id
         }
-        path = cfg.get_custom_rewards
+        path = cfg.get_custom_reward
         query = f'?broadcaster_id={broadcaster_id}&only_manageable_rewards=True'
         response = req.get(
             self.base_url + path + query,
