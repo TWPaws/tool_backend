@@ -95,7 +95,8 @@ def update_access_toekn(user_id, access_token):
     connection = connect_to_database()
     cursor = connection.cursor()
     
-    current_app.logger.debug(user_id, access_token)
+    current_app.logger.debug(user_id)
+    current_app.logger.debug(access_token)
     update_query = 'UPDATE users SET access_token = %s WHERE ID = %s'
     cursor.execute(update_query, (access_token, user_id))
     
