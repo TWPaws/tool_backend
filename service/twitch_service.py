@@ -83,9 +83,9 @@ class TwitchService:
         }
 
         path = cfg.create_custom_reward
-        query = {
+        query = (
             f'?broadcaster_id={broadcaster_id}'
-        }
+        )
         response = req.post(
             self.base_url + path + query,
             headers=headers,
