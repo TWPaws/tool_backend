@@ -7,6 +7,7 @@ from repo.user_operations import add_user, search_user_password, update_access_t
 from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
 from model.user_model import User
+import hashlib
 import json
 
 user = Blueprint('user', __name__)
@@ -77,13 +78,16 @@ def register():
     email = data.get('email')
     password = data.get('password')
     confirm_password = data.get('confirm-password')
-    print(nickname,username,email,password,confirm_password)
+
+
     if nickname and username and email and password and confirm_password:
         if password == confirm_password:
             if search_user_password(username, password):
                 return {'error': 'User already exists'}, 400
             else:
-                add_user(nickname, username, email, password)
+                password = password.encode('utf-8')
+                hash_password = hashlib.sha256(password).hexdigest()
+                add_user(nickname, username, email, hash_password)
                 return {'status': 'Success'}, 200
     else:
         return {'status': 'Registration failed'}, 400
@@ -94,8 +98,11 @@ def login():
     data = request.json
     username = data.get('username')
     password = data.get('password')
-    if username and password:
-        user_data = (search_user_password(username, password))
+    password = password.encode('utf-8')
+    hash_password = hashlib.sha256(password).hexdigest()
+
+    if username and hash_password:
+        user_data = (search_user_password(username, hash_password))
         if user_data:
             user = User(
               user_data[0],
