@@ -5,7 +5,7 @@ from flask import current_app
 import config as cfg
 
 class TwitchService:
-    base_url = cfg.twitch_api
+    base_url = str(cfg.twitch_api)
 
     def __init__(self, access_token):
         self.access_token = access_token

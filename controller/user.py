@@ -94,15 +94,15 @@ def login():
     password = request.form['password']
     if username and password:
         user_data = (search_user_password(username, password))
-        user = User(
-          user_data[0],
-          user_data[1],
-          user_data[2],
-          user_data[3],
-          user_data[4],
-          user_data[5],
-          user_data[6])
-        if user:
+        if user_data:
+            user = User(
+              user_data[0],
+              user_data[1],
+              user_data[2],
+              user_data[3],
+              user_data[4],
+              user_data[5],
+              user_data[6])
             login_user(user)
             return {'status': 'Success'}, 200
         else:

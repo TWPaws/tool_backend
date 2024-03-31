@@ -10,6 +10,7 @@ config.read('secret.ini', encoding='utf-8')
 database_user = config['Database']['user']
 database_password = config['Database']['password']
 database_name = config['Database']['database']
+database_host = config['Database']['host']
 
 oauth20_url = config['Oauth20_URL']['Oauth20_url']
 redirect_url = config['Oauth20_URL']['redirect_url']
