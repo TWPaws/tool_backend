@@ -26,11 +26,11 @@ def get_access_token(authorization_code):
     response = req.post(url, data=data)
     current_app.logger.debug(response.text)
     data = response.json()
-    return data["access_token"]
+    return data
 
 def validate_access_token(access_token):
     headers = {
-        'Authorization': f'OAuth {access_token}',
+        'Authorization': f'OAuth {access_token}'
     }
 
     url = cfg.oauth20_valid
@@ -44,3 +44,15 @@ def validate_access_token(access_token):
         return True
     else :
         return False
+
+def refresh_access_token(access_token):
+    headers = {
+        'Content-Type': 'application/x-www-form-urlencoded'
+    }
+
+    data = {
+    'grant_type': 'refresh_token',
+    'refresh_token': 'gdw3k62zpqi0kw01escg7zgbdhtxi6hm0155tiwcztxczkx17',
+    'client_id': '<your client id goes here>',
+    'client_secret': '<your client secret goes here>'
+    }

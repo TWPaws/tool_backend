@@ -64,8 +64,10 @@ def twitch_callback():
 
     user_id = current_user.get_id()
 
-    access_token = get_access_token(code)
-    update_access_toekn(user_id, access_token)
+    data = get_access_token(code)
+    access_token = data['access_token']
+    refresh_token = data['refresh_token']
+    update_access_toekn(user_id, access_token, refresh_token)
 
     return redirect('/')
 
@@ -112,7 +114,8 @@ def login():
               user_data[4],
               user_data[5],
               user_data[6],
-              user_data[7])
+              user_data[7],
+              user_data[8])
             login_user(user)
             return {'status': 'Success'}, 200
         else:
@@ -137,7 +140,8 @@ def load_user(user_id):
           user_data[4],
           user_data[5],
           user_data[6],
-          user_data[7])
+          user_data[7],
+          user_data[8])
     return user
 
 @user.route('/status', methods=['GET'])
