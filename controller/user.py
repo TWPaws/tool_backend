@@ -150,5 +150,13 @@ def status():
     if validate_access_token(current_user.access_token) :
         return {'nickname' : f'{current_user.nickname}', 'verified' : f'{current_user.verified}','status' : 'access_token is valid'}, 200
     else :
-        return {'nickname' : f'{current_user.nickname}', 'status' : 'access_token has to be refresh'}, 404
+        data = refresh_access_token(current_user.refresh_token)
+        if data:
+            access_token = data['access_token']
+            refresh_token = data['refresh_token']
+            update_access_toekn(current_user.get_id(), access_token, refresh_token)
+            return {'nickname' : f'{current_user.nickname}', 'verified' : f'{current_user.verified}','status' : 'access_token is valid'}, 200
+        else :
+            return {'status' : 'refresh token is invalid'}, 400
+        
     

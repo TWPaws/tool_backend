@@ -45,14 +45,27 @@ def validate_access_token(access_token):
     else :
         return False
 
-def refresh_access_token(access_token):
+def refresh_access_token(refresh_token):
     headers = {
         'Content-Type': 'application/x-www-form-urlencoded'
     }
 
     data = {
     'grant_type': 'refresh_token',
-    'refresh_token': 'gdw3k62zpqi0kw01escg7zgbdhtxi6hm0155tiwcztxczkx17',
-    'client_id': '<your client id goes here>',
-    'client_secret': '<your client secret goes here>'
+    'refresh_token': refresh_token,
+    'client_id': cfg.client_id,
+    'client_secret': cfg.client_secret
     }
+
+    url = cfg.oauth20_url
+
+    response = req.post(
+        url,
+        headers=headers,
+        data=data
+    )
+
+    if response.status_code == 200:
+        return response.json()
+    else :
+        return null
