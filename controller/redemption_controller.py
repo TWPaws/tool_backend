@@ -1,7 +1,7 @@
 # ./controller/redemption_controller.py
 from flask import Blueprint, request
 from service.twitch_service import TwitchService
-from flask_login import LoginManager, login_required, current_user
+from flask_login import login_required, current_user
 
 point = Blueprint('point', __name__)
 
@@ -243,13 +243,13 @@ def create_custom_rewards():
             }
           }
     """
-    
+
     access_token = current_user.access_token
     broadcaster_id = current_user.broadcaster_id
     data = request.json
     if access_token is None:
         return {'error': 'Please connect to Twitch'}, 401
-    
+
     twitch_service = TwitchService(access_token)
     response = twitch_service.create_custom_rewards(broadcaster_id, data)
 
@@ -285,7 +285,6 @@ def delete_rewards(reward_ID):
 
     access_token = current_user.access_token
     broadcaster_id = current_user.broadcaster_id
-
 
     if access_token is None:
         return {'error': 'Please connect to Twitch'}, 401

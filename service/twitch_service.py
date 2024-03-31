@@ -4,6 +4,7 @@ import requests as req
 from flask import current_app
 import config as cfg
 
+
 class TwitchService:
     base_url = str(cfg.twitch_api)
 
@@ -91,7 +92,6 @@ class TwitchService:
             headers=headers,
             json=data
         )
-
 
         if response.status_code == 200:
             return response.json()

@@ -2,6 +2,7 @@
 
 from util.database import connect_to_database
 
+
 def fetch_all_users():
     connection = connect_to_database()
     cursor = connection.cursor()
@@ -18,7 +19,6 @@ def fetch_all_users():
 def add_user(user_data):
     connection = connect_to_database()
     cursor = connection.cursor()
-    
 
     insert_query = 'INSERT INTO users (id, username, email) VALUES (%s, %s, %s)'
     cursor.execute(insert_query, (user_data['id'], user_data['username'], user_data['email']))

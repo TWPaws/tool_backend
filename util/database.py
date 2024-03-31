@@ -1,6 +1,7 @@
 import mysql.connector
 import config as cfg
 
+
 def connect_to_database():
     config = {
         'host': cfg.database_host,

@@ -1,9 +1,8 @@
 # ./repo/user_operations.py
 
-import mysql.connector
 import hashlib
 from util.database import connect_to_database
-from flask import current_app  
+
 
 def fetch_all_users():
     connection = connect_to_database()
@@ -61,11 +60,11 @@ def search_user_password(username, password):
 
     user = cursor.fetchone()
 
-
     cursor.close()
     connection.close()
 
     return user
+
 
 def search_user_id(user_id):
     connection = connect_to_database()
@@ -80,6 +79,7 @@ def search_user_id(user_id):
 
     return user
 
+
 def update_broadcaster_id(user_id, boradcaster_id):
     connection = connect_to_database()
     cursor = connection.cursor()
@@ -93,13 +93,14 @@ def update_broadcaster_id(user_id, boradcaster_id):
 
     return 'True'
 
+
 def update_access_toekn(user_id, access_token, refresh_token):
     connection = connect_to_database()
     cursor = connection.cursor()
-    
+
     update_query = 'UPDATE users SET access_token = %s, refresh_token = %s WHERE ID = %s'
     cursor.execute(update_query, (access_token, refresh_token, user_id))
-    
+
     connection.commit()
     cursor.close()
     connection.close()

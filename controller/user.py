@@ -1,14 +1,12 @@
 # ./controller/user.py
 from flask import Blueprint, request, redirect, current_app
 from service.twitch_service import TwitchService
-from service.Oauth20 import get_access_token, validate_access_token
+from service.Oauth20 import get_access_token, validate_access_token, refresh_access_token
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
-from repo.user_operations import add_user, search_user_password, update_access_toekn, search_user_id, update_broadcaster_id
-from werkzeug.security import generate_password_hash
-from werkzeug.security import check_password_hash
+from repo.user_operations import add_user, search_user_password, update_access_toekn
+from repo.user_operations import search_user_id, update_broadcaster_id
 from model.user_model import User
 import hashlib
-import json
 
 user = Blueprint('user', __name__)
 login_manager = LoginManager()
@@ -81,7 +79,6 @@ def register():
     password = data.get('password')
     confirm_password = data.get('confirm-password')
 
-
     if nickname and username and email and password and confirm_password:
         if password == confirm_password:
             if search_user_password(username, password):
@@ -144,19 +141,23 @@ def load_user(user_id):
           user_data[8])
     return user
 
+
 @user.route('/status', methods=['GET'])
 @login_required
 def status():
-    if validate_access_token(current_user.access_token) :
-        return {'nickname' : f'{current_user.nickname}', 'verified' : f'{current_user.verified}','status' : 'access_token is valid'}, 200
-    else :
+    if validate_access_token(current_user.access_token):
+        nickname = current_user.nickname
+        verified = current_user.verified
+        return {'nickname': f'{nickname}', 'verified': f'{verified}', 'status': 'access_token is valid'}, 200
+    else:
         data = refresh_access_token(current_user.refresh_token)
         if data:
             access_token = data['access_token']
             refresh_token = data['refresh_token']
             update_access_toekn(current_user.get_id(), access_token, refresh_token)
-            return {'nickname' : f'{current_user.nickname}', 'verified' : f'{current_user.verified}','status' : 'access_token is valid'}, 200
-        else :
-            return {'status' : 'refresh token is invalid'}, 400
-        
-    
+
+            nickname = current_user.nickname
+            verified = current_user.verified
+            return {'nickname': f'{nickname}', 'verified': f'{verified}', 'status': 'access_token is valid'}, 200
+        else:
+            return {'status': 'refresh token is invalid'}, 400

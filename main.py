@@ -3,7 +3,6 @@ from controller.redemption_controller import point
 from controller.user import user, login_manager
 from flask_cors import CORS
 from flasgger import Swagger
-from flask_login import LoginManager
 import config
 
 app = Flask(__name__)
@@ -24,6 +23,7 @@ app.register_blueprint(point, url_prefix='/api/redemption')
 CORS(app)
 Swagger(app)
 login_manager.init_app(app)
+
 
 @app.route('/')
 def hello():

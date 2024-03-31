@@ -2,7 +2,6 @@
 
 import requests as req
 import config as cfg
-from flask import current_app   
 
 
 def get_access_token(authorization_code):
@@ -10,11 +9,6 @@ def get_access_token(authorization_code):
     client_id = cfg.client_id
     client_secret = cfg.client_secret
     redirect_url = cfg.redirect_url
-    
-    current_app.logger.debug(url)
-    current_app.logger.debug(client_id)
-    current_app.logger.debug(client_secret)
-    current_app.logger.debug(redirect_url)
 
     data = {
         'client_id': client_id,
@@ -24,9 +18,9 @@ def get_access_token(authorization_code):
         'redirect_uri': redirect_url
     }
     response = req.post(url, data=data)
-    current_app.logger.debug(response.text)
     data = response.json()
     return data
+
 
 def validate_access_token(access_token):
     headers = {
@@ -34,16 +28,17 @@ def validate_access_token(access_token):
     }
 
     url = cfg.oauth20_valid
-    
+
     response = req.get(
        url,
-       headers=headers 
+       headers=headers
     )
 
     if response.status_code == 200:
         return True
-    else :
+    else:
         return False
+
 
 def refresh_access_token(refresh_token):
     headers = {
@@ -51,10 +46,10 @@ def refresh_access_token(refresh_token):
     }
 
     data = {
-    'grant_type': 'refresh_token',
-    'refresh_token': refresh_token,
-    'client_id': cfg.client_id,
-    'client_secret': cfg.client_secret
+        'grant_type': 'refresh_token',
+        'refresh_token': refresh_token,
+        'client_id': cfg.client_id,
+        'client_secret': cfg.client_secret
     }
 
     url = cfg.oauth20_url
@@ -67,5 +62,5 @@ def refresh_access_token(refresh_token):
 
     if response.status_code == 200:
         return response.json()
-    else :
-        return null
+    else:
+        return False
