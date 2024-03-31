@@ -28,22 +28,3 @@ delete_reward = config['Redemptions']['delete_rewards']
 update_reward = config['Redemptions']['update_Reward']
 
 secret_key = config['Flask']['secret']
-
-# 输出配置信息示例
-print("Database User:", database_user)
-print("Database Password:", database_password)
-print("Database Name:", database_name)
-print("Database Client ID:", client_id)
-print("Database Client Secret:", client_secret)
-
-print("OAuth 2.0 URL:", oauth20_url)
-print("Redirect url:", redirect_url)
-print("OAuth 2.0 Validation URL:", oauth20_valid)
-print("Twitch API URL:", twitch_api)
-
-print("Get Broadcaster ID Endpoint:", get_broadcaster_id)
-print("Get Custom Rewards Endpoint:", get_custom_reward)
-print("Rewards Redemption Endpoint:", rewards_redemption)
-print("Create Custom Rewards Endpoint:", create_custom_reward)
-print("Delete Rewards Endpoint:", delete_reward)
-print("Update Reward Endpoint:", update_reward)

@@ -249,7 +249,8 @@ def create_custom_rewards():
     data = request.json
     if access_token is None:
         return {'error': 'Please connect to Twitch'}, 401
-
+    
+    print(access_token)
     twitch_service = TwitchService(access_token)
     response = twitch_service.create_custom_rewards(broadcaster_id, data)
 
@@ -259,9 +260,9 @@ def create_custom_rewards():
         return {'error': "Failed to create custom reward"}, 400
 
 
-@point.route('/rewards/<reward_id>', methods=['DELETE'])
+@point.route('/rewards/<reward_ID>', methods=['DELETE'])
 @login_required
-def delete_rewards(reward_id):
+def delete_rewards(reward_ID):
 
     """
     Delete custom rewards
@@ -285,14 +286,14 @@ def delete_rewards(reward_id):
 
     access_token = current_user.access_token
     broadcaster_id = current_user.broadcaster_id
-    rewardID = reward_id
+
 
     if access_token is None:
         return {'error': 'Please connect to Twitch'}, 401
 
     twitch_service = TwitchService(access_token)
 
-    response = twitch_service.delete_rewards(broadcaster_id, rewardID)
+    response = twitch_service.delete_rewards(broadcaster_id, reward_ID)
 
     if response is not None:
         return response
@@ -303,7 +304,6 @@ def delete_rewards(reward_id):
 @point.route('/rewards', methods=['PATCH'])
 @login_required
 def update_Reward():
-
     """
     Update custom rewards List
     Used to modify redemption point information for a specific ID

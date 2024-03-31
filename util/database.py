@@ -3,7 +3,7 @@ import config as cfg
 
 def connect_to_database():
     config = {
-        'host': config.database_host,
+        'host': cfg.database_host,
         'user': cfg.database_user,
         'password': cfg.database_password,
         'database': cfg.database_name
