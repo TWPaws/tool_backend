@@ -60,6 +60,8 @@ def search_user_password(username, password):
     cursor.execute(select_query, (username, password))
 
     user = cursor.fetchone()
+
+
     cursor.close()
     connection.close()
 
