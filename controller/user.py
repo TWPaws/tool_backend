@@ -71,12 +71,13 @@ def twitch_callback():
 
 @user.route('/register', methods=['POST'])
 def register():
-    nickname = request.form['nickname']
-    username = request.form['username']
-    email = request.form['email']
-    password = request.form['password']
-    confirm_password = request.form['confirm-password']
-
+    data = request.json
+    nickname = data.get('nickname')
+    username = data.get('username')
+    email = data.get('email')
+    password = data.get('password')
+    confirm_password = data.get('confirm-password')
+    print(nickname,username,email,password,confirm_password)
     if nickname and username and email and password and confirm_password:
         if password == confirm_password:
             if search_user_password(username, password):
@@ -90,8 +91,9 @@ def register():
 
 @user.route('/login', methods=['POST'])
 def login():
-    username = request.form['username']
-    password = request.form['password']
+    data = request.json
+    username = data.get('username')
+    password = data.get('password')
     if username and password:
         user_data = (search_user_password(username, password))
         if user_data:

@@ -250,7 +250,6 @@ def create_custom_rewards():
     if access_token is None:
         return {'error': 'Please connect to Twitch'}, 401
     
-    print(access_token)
     twitch_service = TwitchService(access_token)
     response = twitch_service.create_custom_rewards(broadcaster_id, data)
 
