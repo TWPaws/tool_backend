@@ -83,7 +83,7 @@ def register():
     if nickname and username and email and password and confirm_password:
         if password == confirm_password:
             if search_user_password(username, password):
-                return {'error': 'User already exists'}, 400
+                return {'error': 'User already exists'}, 401
             else:
                 password = password.encode('utf-8')
                 hash_password = hashlib.sha256(password).hexdigest()
@@ -111,7 +111,8 @@ def login():
               user_data[3],
               user_data[4],
               user_data[5],
-              user_data[6])
+              user_data[6],
+              user_data[7])
             login_user(user)
             return {'status': 'Success'}, 200
         else:
@@ -135,15 +136,15 @@ def load_user(user_id):
           user_data[3],
           user_data[4],
           user_data[5],
-          user_data[6])
+          user_data[6],
+          user_data[7])
     return user
 
 @user.route('/status', methods=['GET'])
 @login_required
 def status():
     if validate_access_token(current_user.access_token) :
-        return {'nickname' : f'{current_user.nickname}', 'status' : 'access_token is valid'}, 200
+        return {'nickname' : f'{current_user.nickname}', 'verified' : f'{current_user.verified}','status' : 'access_token is valid'}, 200
     else :
         return {'nickname' : f'{current_user.nickname}', 'status' : 'access_token has to be refresh'}, 404
-
     
