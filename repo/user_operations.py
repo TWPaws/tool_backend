@@ -85,7 +85,7 @@ def search_user_by_email(email):
     cursor = connection.cursor()
 
     select_query = 'SELECT * FROM users WHERE email = %s'
-    cursor.execute(select_query, (email))
+    cursor.execute(select_query, (email,))
 
     user = cursor.fetchone()
     cursor.close()
