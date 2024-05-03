@@ -3,7 +3,7 @@ from flask import Blueprint, request, redirect, current_app
 from service.twitch_service import TwitchService
 from service.Oauth20 import get_access_token, validate_access_token, refresh_access_token
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
-from repo.user_operations import add_user, search_user_password, update_access_toekn
+from repo.user_operations import add_user, search_user_by_email_password, search_user_by_email, update_access_toekn
 from repo.user_operations import search_user_id, update_broadcaster_id
 from model.user_model import User
 import hashlib
@@ -77,17 +77,15 @@ def register():
     username = data.get('username')
     email = data.get('email')
     password = data.get('password')
-    confirm_password = data.get('confirm-password')
 
-    if nickname and username and email and password and confirm_password:
-        if password == confirm_password:
-            if search_user_password(username, password):
-                return {'error': 'User already exists'}, 401
-            else:
-                password = password.encode('utf-8')
-                hash_password = hashlib.sha256(password).hexdigest()
-                add_user(nickname, username, email, hash_password)
-                return {'status': 'Success'}, 200
+    if nickname and username and email and password:
+        if search_user_by_email(email):
+            return {'error': 'User already exists'}, 401
+        else:
+            password = password.encode('utf-8')
+            hash_password = hashlib.sha256(password).hexdigest()
+            add_user(nickname, username, email, hash_password)
+            return {'status': 'Success'}, 200
     else:
         return {'status': 'Registration failed'}, 400
 
@@ -95,13 +93,13 @@ def register():
 @user.route('/login', methods=['POST'])
 def login():
     data = request.json
-    username = data.get('username')
+    email = data.get('email')
     password = data.get('password')
     password = password.encode('utf-8')
     hash_password = hashlib.sha256(password).hexdigest()
 
-    if username and hash_password:
-        user_data = (search_user_password(username, hash_password))
+    if email and hash_password:
+        user_data = (search_user_by_email_password(email, hash_password))
         if user_data:
             user = User(
               user_data[0],
@@ -114,7 +112,11 @@ def login():
               user_data[7],
               user_data[8])
             login_user(user)
-            return {'status': 'Success'}, 200
+            if user.access_token is not None and validate_access_token(user.access_token):
+                return {'status': 'Success'}, 200
+            else:
+                return {'status': 'You have not obtained an OAuth 2.0 access token or it has expired. \
+                    Obtain a new one to use the service.'}, 401
         else:
             return {'error': 'User not found'}, 404
 

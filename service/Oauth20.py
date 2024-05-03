@@ -23,19 +23,22 @@ def get_access_token(authorization_code):
 
 
 def validate_access_token(access_token):
-    headers = {
-        'Authorization': f'OAuth {access_token}'
-    }
+    if (access_token is not None):
+        headers = {
+            'Authorization': f'OAuth {access_token}'
+        }
 
-    url = cfg.oauth20_valid
+        url = cfg.oauth20_valid
 
-    response = req.get(
-       url,
-       headers=headers
-    )
+        response = req.get(
+           url,
+           headers=headers
+        )
 
-    if response.status_code == 200:
-        return True
+        if response.status_code == 200:
+            return True
+        else:
+            return False
     else:
         return False
 

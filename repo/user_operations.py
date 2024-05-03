@@ -51,12 +51,12 @@ def search_user(username):
     return user
 
 
-def search_user_password(username, password):
+def search_user_by_email_password(email, password):
     connection = connect_to_database()
     cursor = connection.cursor()
 
-    select_query = "SELECT * FROM users WHERE username = %s AND hash_password = %s"
-    cursor.execute(select_query, (username, password))
+    select_query = "SELECT * FROM users WHERE email = %s AND hash_password = %s"
+    cursor.execute(select_query, (email, password))
 
     user = cursor.fetchone()
 
@@ -66,12 +66,26 @@ def search_user_password(username, password):
     return user
 
 
-def search_user_id(user_id):
+def search_user_by_id(user_id):
     connection = connect_to_database()
     cursor = connection.cursor()
 
     select_query = 'SELECT * FROM users WHERE ID = %s'
     cursor.execute(select_query, (user_id,))
+
+    user = cursor.fetchone()
+    cursor.close()
+    connection.close()
+
+    return user
+
+
+def search_user_by_email(email):
+    connection = connect_to_database()
+    cursor = connection.cursor()
+
+    select_query = 'SELECT * FROM users WHERE email = %s'
+    cursor.execute(select_query, (email))
 
     user = cursor.fetchone()
     cursor.close()
