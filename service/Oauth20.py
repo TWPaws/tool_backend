@@ -34,7 +34,6 @@ def validate_access_token(access_token):
            url,
            headers=headers
         )
-
         if response.status_code == 200:
             return True
         else:

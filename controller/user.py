@@ -4,7 +4,7 @@ from service.twitch_service import TwitchService
 from service.Oauth20 import get_access_token, validate_access_token, refresh_access_token
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from repo.user_operations import add_user, search_user_by_email_password, search_user_by_email, update_access_toekn
-from repo.user_operations import search_user_id, update_broadcaster_id
+from repo.user_operations import search_user_by_id, update_broadcaster_id
 from model.user_model import User
 import hashlib
 
@@ -97,7 +97,6 @@ def login():
     password = data.get('password')
     password = password.encode('utf-8')
     hash_password = hashlib.sha256(password).hexdigest()
-
     if email and hash_password:
         user_data = (search_user_by_email_password(email, hash_password))
         if user_data:
@@ -115,8 +114,8 @@ def login():
             if user.access_token is not None and validate_access_token(user.access_token):
                 return {'status': 'Success'}, 200
             else:
-                return {'status': 'You have not obtained an OAuth 2.0 access token or it has expired. \
-                    Obtain a new one to use the service.'}, 401
+                return {'status': 'You have not obtained an OAuth 2.0 access token or it has expired.\
+                    Obtain a new one to use the service.'}, 200
         else:
             return {'error': 'User not found'}, 404
 
@@ -130,7 +129,7 @@ def logout():
 
 @login_manager.user_loader
 def load_user(user_id):
-    user_data = search_user_id(user_id)
+    user_data = search_user_by_id(user_id)
     user = User(
           user_data[0],
           user_data[1],
