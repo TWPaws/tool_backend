@@ -3,7 +3,7 @@ from flask import Blueprint, request, redirect, current_app
 from service.twitch_service import TwitchService
 from service.Oauth20 import get_access_token, validate_access_token, refresh_access_token
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
-from repo.user_operations import add_user, search_user_by_email_password, search_user_by_email, update_access_toekn
+from repo.user_operations import add_user, search_user_by_username_password, search_user_by_username, update_access_toekn
 from repo.user_operations import search_user_by_id, update_broadcaster_id
 from model.user_model import User
 import hashlib
@@ -75,16 +75,16 @@ def register():
     data = request.json
     nickname = data.get('nickname')
     username = data.get('username')
-    email = data.get('email')
+    username = data.get('email')
     password = data.get('password')
 
-    if nickname and username and email and password:
-        if search_user_by_email(email):
+    if nickname and username and password:
+        if search_user_by_username(username):
             return {'error': 'User already exists'}, 401
         else:
             password = password.encode('utf-8')
             hash_password = hashlib.sha256(password).hexdigest()
-            add_user(nickname, username, email, hash_password)
+            add_user(nickname, username, hash_password)
             return {'status': 'Success'}, 200
     else:
         return {'status': 'Registration failed'}, 400
@@ -93,12 +93,12 @@ def register():
 @user.route('/login', methods=['POST'])
 def login():
     data = request.json
-    email = data.get('email')
+    username = data.get('username')
     password = data.get('password')
     password = password.encode('utf-8')
     hash_password = hashlib.sha256(password).hexdigest()
-    if email and hash_password:
-        user_data = (search_user_by_email_password(email, hash_password))
+    if username and hash_password:
+        user_data = (search_user_by_username_password(username, hash_password))
         if user_data:
             user = User(
               user_data[0],
@@ -108,8 +108,7 @@ def login():
               user_data[4],
               user_data[5],
               user_data[6],
-              user_data[7],
-              user_data[8])
+              user_data[7])
             login_user(user)
             if user.access_token is not None and validate_access_token(user.access_token):
                 return {'status': 'Success'}, 200
@@ -138,8 +137,7 @@ def load_user(user_id):
           user_data[4],
           user_data[5],
           user_data[6],
-          user_data[7],
-          user_data[8])
+          user_data[7])
     return user
 
 

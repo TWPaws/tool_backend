@@ -17,15 +17,14 @@ def fetch_all_users():
     return result
 
 
-def add_user(nickname, username, email, hash_password):
+def add_user(nickname, username, hash_password):
     connection = connect_to_database()
     cursor = connection.cursor()
 
-    insert_query = 'INSERT INTO users (nickname, username, email, hash_password) VALUES (%s, %s, %s, %s)'
+    insert_query = 'INSERT INTO users (nickname, username, hash_password) VALUES (%s, %s, %s)'
     cursor.execute(insert_query, (
         nickname,
         username,
-        email,
         hash_password,
     ))
 
@@ -51,12 +50,12 @@ def search_user(username):
     return user
 
 
-def search_user_by_email_password(email, hash_password):
+def search_user_by_username_password(username, hash_password):
     connection = connect_to_database()
     cursor = connection.cursor()
 
-    select_query = "SELECT * FROM users WHERE email = %s AND hash_password = %s"
-    cursor.execute(select_query, (email, hash_password,))
+    select_query = "SELECT * FROM users WHERE username = %s AND hash_password = %s"
+    cursor.execute(select_query, (username, hash_password,))
 
     user = cursor.fetchone()
 
@@ -80,12 +79,12 @@ def search_user_by_id(user_id):
     return user
 
 
-def search_user_by_email(email):
+def search_user_by_username(username):
     connection = connect_to_database()
     cursor = connection.cursor()
 
-    select_query = 'SELECT * FROM users WHERE email = %s'
-    cursor.execute(select_query, (email,))
+    select_query = 'SELECT * FROM users WHERE username = %s'
+    cursor.execute(select_query, (username,))
 
     user = cursor.fetchone()
     cursor.close()
