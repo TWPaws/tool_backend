@@ -159,4 +159,4 @@ def status():
             verified = current_user.verified
             return {'nickname': f'{nickname}', 'verified': f'{verified}', 'status': 'access_token is valid'}, 200
         else:
-            return {'status': 'refresh token is invalid'}, 400
+            return {'status': 'refresh token is invalid or you have not obtained an OAuth 2.0 access token '}, 200
