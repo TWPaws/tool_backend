@@ -3,8 +3,8 @@ from flask import Blueprint, request, redirect, current_app
 from service.twitch_service import TwitchService
 from service.Oauth20 import get_access_token, validate_access_token, refresh_access_token
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
-from repo.user_operations import add_user, search_user_by_username_password, search_user_by_username, update_access_toekn
-from repo.user_operations import search_user_by_id, update_broadcaster_id
+from repo.user_operations import add_user, search_user_by_username_password, search_user_by_username
+from repo.user_operations import search_user_by_id, update_broadcaster_id, update_access_toekn
 from model.user_model import User
 import hashlib
 
@@ -147,16 +147,27 @@ def status():
     if validate_access_token(current_user.access_token):
         nickname = current_user.nickname
         verified = current_user.verified
-        return {'nickname': f'{nickname}', 'verified': f'{verified}', 'status': 'access_token is valid'}, 200
+        return {
+            'nickname': f'{nickname}',
+            'verified': f'{verified}',
+            'status': 'access_token is valid'}, 200
     else:
         data = refresh_access_token(current_user.refresh_token)
         if data:
             access_token = data['access_token']
             refresh_token = data['refresh_token']
             update_access_toekn(current_user.get_id(), access_token, refresh_token)
+            token_valid = True
 
-            nickname = current_user.nickname
-            verified = current_user.verified
-            return {'nickname': f'{nickname}', 'verified': f'{verified}', 'status': 'access_token is valid'}, 200
+            return {
+                'nickname': f'{nickname}',
+                'verified': f'{verified}',
+                'is token valid': f'{token_valid}',
+                'status': 'access_token is valid'}, 200
         else:
-            return {'status': 'refresh token is invalid or you have not obtained an OAuth 2.0 access token '}, 200
+            token_valid = False
+            return {
+                'nickname': f'{nickname}',
+                'verified': f'{verified}',
+                'is token valid': f'{token_valid}',
+                'status': 'refresh token is invalid or ywou have not obtained an OAuth 2.0 access token '}, 200
