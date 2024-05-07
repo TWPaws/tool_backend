@@ -75,7 +75,6 @@ def register():
     data = request.json
     nickname = data.get('nickname')
     username = data.get('username')
-    username = data.get('email')
     password = data.get('password')
 
     if nickname and username and password:
