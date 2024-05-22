@@ -27,7 +27,6 @@ def validate_access_token(access_token):
         headers = {
             'Authorization': f'OAuth {access_token}'
         }
-
         url = cfg.oauth20_valid
 
         response = req.get(

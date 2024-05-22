@@ -17,14 +17,14 @@ def fetch_all_users():
     return result
 
 
-def add_user(nickname, username, hash_password):
+def add_user(nickname, email, hash_password):
     connection = connect_to_database()
     cursor = connection.cursor()
 
     insert_query = 'INSERT INTO users (nickname, username, hash_password) VALUES (%s, %s, %s)'
     cursor.execute(insert_query, (
         nickname,
-        username,
+        email,
         hash_password,
     ))
 

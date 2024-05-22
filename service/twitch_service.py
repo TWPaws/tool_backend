@@ -38,6 +38,7 @@ class TwitchService:
             self.base_url + path + query,
             headers=headers
         )
+
         if response.status_code == 200:
             while 'cursor' in response.json().get('pagination', {}):
                 cursor = response['pagination']['cursor']
@@ -92,7 +93,6 @@ class TwitchService:
             headers=headers,
             json=data
         )
-
         if response.status_code == 200:
             return response.json()
         else:

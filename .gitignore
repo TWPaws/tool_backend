@@ -13,4 +13,6 @@ venv/
 
 .vscode/
 
+.service/test.py
+
 secret.ini

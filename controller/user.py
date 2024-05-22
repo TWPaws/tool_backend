@@ -74,16 +74,16 @@ def twitch_callback():
 def register():
     data = request.json
     nickname = data.get('nickname')
-    username = data.get('username')
+    email = data.get('username')
     password = data.get('password')
 
-    if nickname and username and password:
-        if search_user_by_username(username):
+    if nickname and email and password:
+        if search_user_by_username(email):
             return {'error': 'User already exists'}, 401
         else:
             password = password.encode('utf-8')
             hash_password = hashlib.sha256(password).hexdigest()
-            add_user(nickname, username, hash_password)
+            add_user(nickname, email, hash_password)
             return {'status': 'Success'}, 200
     else:
         return {'status': 'Registration failed'}, 400
