@@ -116,8 +116,8 @@ def login():
                     response = refresh_access_token(user.refresh_token)
                     update_access_toekn(user.id, response.get('access_token'), user.refresh_token)
                     return {'status': 'Your OAuth 2.0 access token have been refresh.'}, 200
-            else :
-                return {'status':"You don't have access token,Please get one to use the service"}, 200
+            else:
+                return {'status': "You don't have access token,Please get one to use the service"}, 200
         else:
             return {'error': 'User not found'}, 404
 
