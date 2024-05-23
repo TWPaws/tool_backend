@@ -109,11 +109,15 @@ def login():
               user_data[6],
               user_data[7])
             login_user(user)
-            if user.access_token is not None and validate_access_token(user.access_token):
-                return {'status': 'Success'}, 200
-            else:
-                return {'status': 'You have not obtained an OAuth 2.0 access token or it has expired.\
-                    Obtain a new one to use the service.'}, 200
+            if user.access_token is not None:
+                if validate_access_token(user.access_token):
+                    return {'status': 'Success'}, 200
+                else:
+                    response = refresh_access_token(user.refresh_token)
+                    update_access_toekn(user.id, response.get('access_token'), user.refresh_token)
+                    return {'status': 'Your OAuth 2.0 access token have been refresh.'}, 200
+            else :
+                return {'status':"You don't have access token,Please get one to use the service"}, 200
         else:
             return {'error': 'User not found'}, 404
 
