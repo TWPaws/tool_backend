@@ -26,5 +26,7 @@ rewards_redemption = config['Redemptions']['rewards_redemption']
 create_custom_reward = config['Redemptions']['create_custom_rewards']
 delete_reward = config['Redemptions']['delete_rewards']
 update_reward = config['Redemptions']['update_Reward']
+get_VIPs = config['Redemptions']['get_VIPs']
+get_MODs = config['Redemptions']['get_MODs']
 
 secret_key = config['Flask']['secret']

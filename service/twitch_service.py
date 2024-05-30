@@ -3,6 +3,8 @@
 import requests as req
 from flask import current_app
 import config as cfg
+from twitchAPI.twitch import Twitch
+from twitchAPI.helper import first
 
 
 class TwitchService:
@@ -11,6 +13,7 @@ class TwitchService:
     def __init__(self, access_token):
         self.access_token = access_token
         self.client_id = cfg.client_id
+        self.client_secret = cfg.client_secret
 
     def get_broadcaster_id(self):
         headers = {
@@ -108,7 +111,7 @@ class TwitchService:
         query = f'?broadcaster_id={broadcaster_id}&id={reward_id}'
 
         response = req.delete(self.base_url + path + query, headers=headers)
-        current_app.logger.debug(response.text)
+#        current_app.logger.debug(response.text)
 
         if response.status_code == 204:
             return {'status': 'success'}
@@ -131,7 +134,45 @@ class TwitchService:
             json=data
         )
 
-        current_app.logger.debug(response.text)
+#        current_app.logger.debug(response.text)
+        if response.status_code == 200:
+            return response.json()
+        else:
+            return None
+
+    def get_VIPs(self, broadcaster_id):
+        headers = {
+            'Client-ID': self.client_id,
+            'Authorization': f'Bearer {self.access_token}',
+        }
+
+        path = cfg.get_VIPs
+        query = f'?broadcaster_id={broadcaster_id}'
+
+        response = req.get(
+            self.base_url + path + query,
+            headers=headers,
+        )
+
+        if response.status_code == 200:
+            return response.json()
+        else:
+            return None
+
+    def get_MODs(self, broadcaster_id):
+        headers = {
+            'Client-ID': self.client_id,
+            'Authorization': f'Bearer {self.access_token}',
+        }
+
+        path = cfg.get_MODs
+        query = f'?broadcaster_id={broadcaster_id}'
+
+        response = req.get(
+            self.base_url + path + query,
+            headers=headers,
+        )
+        print(response.json())
         if response.status_code == 200:
             return response.json()
         else:

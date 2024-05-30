@@ -390,9 +390,10 @@ def update_Reward():
     else:
         return {'error': "Failed to update custom reward"}, 400
 
+
 @point.route('/moderators', methods=['GET'])
 @login_required
-def get_moderators(reward_ID):
+def get_moderators():
 
     access_token = current_user.access_token
     broadcaster_id = current_user.broadcaster_id
@@ -402,16 +403,17 @@ def get_moderators(reward_ID):
 
     twitch_service = TwitchService(access_token)
 
-    response = twitch_service.get_moderators(broadcaster_id, reward_ID)
+    response = twitch_service.get_MODs(broadcaster_id)
 
     if response is not None:
         return response
     else:
         return {'error': "Failed to get moderators"}, 400
 
+
 @point.route('/VIP', methods=['GET'])
 @login_required
-def get_VIP(reward_ID):
+def get_VIPs():
 
     access_token = current_user.access_token
     broadcaster_id = current_user.broadcaster_id
@@ -421,10 +423,9 @@ def get_VIP(reward_ID):
 
     twitch_service = TwitchService(access_token)
 
-    response = twitch_service.get_VIP(broadcaster_id, reward_ID)
+    response = twitch_service.get_VIPs(broadcaster_id)
 
     if response is not None:
         return response
     else:
         return {'error': "Failed to get VIP"}, 400
-
