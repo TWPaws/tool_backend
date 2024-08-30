@@ -1,6 +1,7 @@
 from flask import Flask
 from controller.redemption_controller import point
 from controller.user import user, login_manager
+from controller.channel import channel
 from flask_cors import CORS
 from flasgger import Swagger
 import config
@@ -18,6 +19,7 @@ app.secret_key = config.secret_key
 
 app.register_blueprint(user, url_prefix='/api/user')
 app.register_blueprint(point, url_prefix='/api/redemption')
+app.register_blueprint(channel, url_prefix='/api/channel')
 
 
 CORS(app)

@@ -47,7 +47,7 @@ def get_broadcaster_id():
 
     twitch_service = TwitchService(access_token)
 
-    response = twitch_service.get_broadcaster_id()
+    response = twitch_service.get_broadcaster_id() 
     if response is not None:
         update_broadcaster_id(current_user.get_id(), response)
         return {'status': 'Broadcaster_id received and updated to database successfully', 'response': response}, 200

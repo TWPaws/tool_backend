@@ -1,10 +1,8 @@
 # ./service/twitch_service.py
 
 import requests as req
-from flask import current_app
 import config as cfg
-from twitchAPI.twitch import Twitch
-from twitchAPI.helper import first
+# from flask import current_app
 
 
 class TwitchService:
