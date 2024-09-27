@@ -114,6 +114,7 @@ def login():
                     return {'status': 'Success'}, 200
                 else:
                     response = refresh_access_token(user.refresh_token)
+                    print(response)
                     update_access_toekn(user.id, response.get('access_token'), user.refresh_token)
                     return {'status': 'Your OAuth 2.0 access token have been refresh.'}, 200
             else:

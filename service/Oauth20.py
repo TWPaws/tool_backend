@@ -64,4 +64,4 @@ def refresh_access_token(refresh_token):
     if response.status_code == 200:
         return response.json()
     else:
-        return False
+        return response.json()
